@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import type React from 'react';
+
 import { FiPlus } from 'react-icons/fi';
 import CreateTaskModal from './CreateTaskModal';
 import CreateNoteModal from './CreateNoteModal';
@@ -7,23 +9,45 @@ import CreateNoteModal from './CreateNoteModal';
 
 const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).join(' ');
 
-function DayView() {
+function DayView({ onSelect }: { onSelect: (date: Date, e: React.MouseEvent) => void }) {
   const hours = Array.from({ length: 17 }, (_, i) => i + 6); // 06:00-22:00
+  const today = new Date();
+
   return (
     <div className="grid grid-cols-[60px_1fr] gap-x-4 text-sm">
       {hours.map((h) => (
         <div key={h} className="contents">
           <div className="text-right pr-2 text-slate-400">{String(h).padStart(2, '0')}:00</div>
-          <div className="border-b border-slate-700 h-12" />
+
+          <div
+            className="border-b border-slate-700 h-12 cursor-pointer"
+            onClick={(e) =>
+              onSelect(
+                new Date(
+                  today.getFullYear(),
+                  today.getMonth(),
+                  today.getDate(),
+                  h
+                ),
+                e
+              )
+            }
+          />
+
         </div>
       ))}
     </div>
   );
 }
 
-function WeekView() {
+
+function WeekView({ onSelect }: { onSelect: (date: Date, e: React.MouseEvent) => void }) {
   const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   const hours = Array.from({ length: 17 }, (_, i) => i + 6);
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+
   return (
     <div className="grid grid-cols-[60px_repeat(7,1fr)] text-sm">
       <div />
@@ -37,16 +61,29 @@ function WeekView() {
           <div className="text-right pr-2 text-slate-400 border-t border-slate-700">
             {String(h).padStart(2, '0')}:00
           </div>
-          {days.map((d) => (
-            <div key={d} className="border-l border-t border-slate-700 h-12" />
-          ))}
+
+          {days.map((_, i) => {
+            const d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            d.setHours(h, 0, 0, 0);
+            return (
+              <div
+                key={i}
+                className="border-l border-t border-slate-700 h-12 cursor-pointer"
+                onClick={(e) => onSelect(d, e)}
+              />
+            );
+          })}
+
         </div>
       ))}
     </div>
   );
 }
 
-function MonthView() {
+
+function MonthView({ onSelect }: { onSelect: (date: Date, e: React.MouseEvent) => void }) {
+
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -68,9 +105,12 @@ function MonthView() {
         <div
           key={i}
           className={cls(
-            'h-24 border-b border-r border-slate-700 p-1',
+
+            'h-24 border-b border-r border-slate-700 p-1 cursor-pointer',
             c.current ? '' : 'bg-white/5 text-slate-500'
           )}
+          onClick={(e) => onSelect(new Date(c.date), e)}
+
         >
           <div className="text-right text-xs">{c.date.getDate()}</div>
         </div>
@@ -84,6 +124,13 @@ export default function Planner() {
 
   const [taskModal, setTaskModal] = useState(false);
   const [noteModal, setNoteModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [menu, setMenu] = useState<{ date: Date; x: number; y: number } | null>(null);
+
+  function handleSelect(date: Date, e: React.MouseEvent) {
+    setMenu({ date, x: e.clientX, y: e.clientY });
+  }
+
 
   return (
     <div className="p-8">
@@ -121,13 +168,23 @@ export default function Planner() {
           <div className="flex gap-2">
             <button
               className="px-3 py-2 rounded-lg bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
-              onClick={() => setTaskModal(true)}
+
+              onClick={() => {
+                setSelectedDate(new Date());
+                setTaskModal(true);
+              }}
+
             >
               <FiPlus /> Nieuwe taak
             </button>
             <button
               className="px-3 py-2 rounded-lg bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
-              onClick={() => setNoteModal(true)}
+
+              onClick={() => {
+                setSelectedDate(new Date());
+                setNoteModal(true);
+              }}
+
             >
               <FiPlus /> Nieuwe notitie
             </button>
@@ -135,14 +192,53 @@ export default function Planner() {
 
         </div>
         <div className="overflow-auto">
-          {view === 'day' && <DayView />}
-          {view === 'week' && <WeekView />}
-          {view === 'month' && <MonthView />}
+          {view === 'day' && <DayView onSelect={handleSelect} />}
+          {view === 'week' && <WeekView onSelect={handleSelect} />}
+          {view === 'month' && <MonthView onSelect={handleSelect} />}
         </div>
       </section>
-
-      <CreateTaskModal open={taskModal} onClose={() => setTaskModal(false)} onCreated={() => {}} />
-      <CreateNoteModal open={noteModal} onClose={() => setNoteModal(false)} onCreated={() => {}} />
+      {menu && (
+        <div className="fixed inset-0 z-40" onClick={() => setMenu(null)}>
+          <div
+            className="absolute bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg flex flex-col"
+            style={{ left: menu.x, top: menu.y }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="px-3 py-2 hover:bg-white/20 text-left"
+              onClick={() => {
+                setSelectedDate(menu.date);
+                setTaskModal(true);
+                setMenu(null);
+              }}
+            >
+              Nieuwe taak
+            </button>
+            <button
+              className="px-3 py-2 hover:bg-white/20 text-left"
+              onClick={() => {
+                setSelectedDate(menu.date);
+                setNoteModal(true);
+                setMenu(null);
+              }}
+            >
+              Nieuwe notitie
+            </button>
+          </div>
+        </div>
+      )}
+      <CreateTaskModal
+        open={taskModal}
+        onClose={() => setTaskModal(false)}
+        onCreated={() => {}}
+        initialDate={selectedDate}
+      />
+      <CreateNoteModal
+        open={noteModal}
+        onClose={() => setNoteModal(false)}
+        onCreated={() => {}}
+        initialDate={selectedDate}
+      />
 
     </div>
   );

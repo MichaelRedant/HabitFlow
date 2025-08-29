@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { HabitId, Quadrant, Task } from './types';
 import { createTask } from './services/api';
 
@@ -8,8 +8,8 @@ const QUICK: Record<Quadrant,{importance:number;urgency:number}> = {
 };
 
 export default function CreateTaskModal(
-  { open, onClose, onCreated }:
-  { open: boolean; onClose: ()=>void; onCreated: (t: Task)=>void; }
+  { open, onClose, onCreated, initialDate }:
+  { open: boolean; onClose: ()=>void; onCreated: (t: Task)=>void; initialDate?: Date | null }
 ) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -18,6 +18,12 @@ export default function CreateTaskModal(
   const [urgency, setUrgency] = useState(2);
   const [dueAt, setDueAt] = useState<string>('');
   const [tags, setTags] = useState<string>('');
+
+  useEffect(() => {
+    if (open) {
+      setDueAt(initialDate ? initialDate.toISOString().slice(0,16) : '');
+    }
+  }, [open, initialDate]);
 
   if (!open) return null;
 
