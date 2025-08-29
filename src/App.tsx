@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiPlus, FiTrash2, FiCopy, FiCheck, FiClock } from "react-icons/fi";
 import { BookOpen, Rocket, Sparkles, Target, Timer, Tags } from "lucide-react";
 import { fetchNotes, createNote as apiCreateNote } from "./services/api";
+import "./index.css";
 import type { Note, HabitId, Quadrant } from "./types";
 
 const HABITS: {id: HabitId; name: string}[] = [
