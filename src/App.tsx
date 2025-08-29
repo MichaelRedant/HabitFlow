@@ -258,7 +258,9 @@ export default function App() {
 
       {/* Top bar */}
         <header className="sticky top-0 backdrop-blur-xl bg-white/5 border-b border-white/10 text-slate-100">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3 sm:flex-nowrap">
+
+          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
+
           <div className="flex items-center gap-2 text-slate-100">
             <Rocket size={18} className="text-teal-300" />
             <span className="font-semibold tracking-wide">HabitFlow</span>
@@ -278,22 +280,26 @@ export default function App() {
             </button>
           </div>
 
-            <div className="ml-0 w-full flex items-center gap-2 sm:ml-auto sm:w-auto sm:justify-end">
+
+            <div className="ml-0 w-full flex flex-wrap items-center gap-2 sm:ml-auto sm:w-auto sm:justify-end">
             {view==='notes' && (
               <>
-                  <div className="relative flex-1">
+                  <div className="relative flex-1 min-w-0">
+
                     <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/>
                     <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Zoek notities…"
                           className="pl-9 pr-3 py-2 w-full sm:w-64 rounded-xl bg-white/10 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"/>
                   </div>
-                <button className="px-3 py-2 rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
+
+                <button className="px-3 py-2 w-full sm:w-auto rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
+
                         onClick={()=>createNote("meeting")}>
                   <FiPlus/> Nieuwe notitie
                 </button>
               </>
             )}
             {view==='matrix' && (
-              <button className="px-3 py-2 rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
+              <button className="px-3 py-2 w-full sm:w-auto rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
                       onClick={()=>setTaskModal(true)}>
                 <FiPlus/> Nieuwe taak
               </button>
