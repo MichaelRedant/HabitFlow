@@ -1,20 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiPlus, FiTrash2, FiCopy, FiCheck, FiClock } from "react-icons/fi";
 import { BookOpen, Rocket, Sparkles, Target, Timer, Tags } from "lucide-react";
-
-type Quadrant = "I" | "II" | "III" | "IV";
-type HabitId = 1|2|3|4|5|6|7;
-
-type Note = {
-  id: string;
-  title: string;
-  content: string;
-  habit: HabitId;
-  quadrant: Quadrant;
-  tags: string[];
-  createdAt: number;
-  updatedAt: number;
-};
+import { fetchNotes, createNote as apiCreateNote } from "./services/api";
+import type { Note, HabitId, Quadrant } from "./types";
 
 const HABITS: {id: HabitId; name: string}[] = [
   { id: 1, name: "Be Proactive" },
@@ -120,7 +108,7 @@ function loadNotes(): Note[] {
   try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) as Note[] : []; }
   catch { return []; }
 }
-function saveNotes(notes: Note[]) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(notes)); } catch {} }
+function saveNotes(notes: Note[]) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(notes)); } catch { /* ignore */ } }
 
 export default function App() {
   const [notes, setNotes] = useState<Note[]>(loadNotes);
@@ -128,6 +116,10 @@ export default function App() {
   const [habit, setHabit] = useState<"all"|`${HabitId}`>("all");
   const [quad, setQuad] = useState<"all"|Quadrant>("all");
   const [selected, setSelected] = useState<string|null>(null);
+
+  useEffect(() => {
+    fetchNotes().then(setNotes).catch(() => { /* ignore errors */ });
+  }, []);
 
   useEffect(()=>saveNotes(notes), [notes]);
 
@@ -153,6 +145,7 @@ export default function App() {
     const newNote: Note = { id, ...base, createdAt: now, updatedAt: now };
     setNotes(xs => [newNote, ...xs]);
     setSelected(id);
+    apiCreateNote(base).catch(() => { /* ignore errors */ });
   }
 
   function update(patch: Partial<Note>) {
@@ -208,7 +201,7 @@ export default function App() {
         <aside className="col-span-4 lg:col-span-3 rounded-2xl p-3 backdrop-blur-xl bg-white/5 border border-white/10">
           <div className="grid grid-cols-2 gap-2">
             <select className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
-                    value={habit} onChange={(e)=>setHabit(e.target.value as any)}>
+                    value={habit} onChange={(e)=>setHabit(e.target.value as `${HabitId}` | "all")}>
               <option value="all">Alle Habits</option>
               {HABITS.map(h=> <option key={h.id} value={h.id}>{`H${h.id} — ${h.name}`}</option>)}
             </select>
