@@ -3,6 +3,7 @@ import { FiHome, FiCalendar, FiFileText, FiUser, FiSettings } from 'react-icons/
 import StartScreen from './StartScreen';
 import TaskMatrix from './TaskMatrix';
 import App from './App';
+import HomePage from './HomePage';
 
 const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).join(' ');
 
@@ -81,7 +82,7 @@ export default function TeslaLayout() {
             backgroundSize: '24px 24px'
           }}
         />
-        {active === 'home' && <Dashboard onSelect={setActive} />}
+        {active === 'home' && <HomePage onSelect={setActive} />}
         {active === 'tasks' && <TaskMatrix />}
         {active === 'notes' && <App />}
         {active === 'profile' && (
@@ -93,33 +94,6 @@ export default function TeslaLayout() {
           </div>
         )}
       </main>
-    </div>
-  );
-}
-
-function Dashboard({ onSelect }: { onSelect: (view: 'tasks' | 'notes') => void }) {
-  return (
-    <div className="p-8">
-      <section className="max-w-3xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
-        <h1 className="text-2xl font-semibold mb-4">Welkom</h1>
-        <p className="text-slate-300 mb-6">
-          Deze layout demonstreert een Tesla futuristische stijl met Apple Glass elementen.
-        </p>
-        <div className="flex gap-4">
-          <button
-            onClick={() => onSelect('tasks')}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-sm"
-          >
-            Taken
-          </button>
-          <button
-            onClick={() => onSelect('notes')}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-sm"
-          >
-            Notities
-          </button>
-        </div>
-      </section>
     </div>
   );
 }
