@@ -1,7 +1,9 @@
 import { useState } from 'react';
+
 import { FiPlus } from 'react-icons/fi';
 import CreateTaskModal from './CreateTaskModal';
 import CreateNoteModal from './CreateNoteModal';
+
 
 const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).join(' ');
 
@@ -79,6 +81,7 @@ function MonthView() {
 
 export default function Planner() {
   const [view, setView] = useState<'day' | 'week' | 'month'>('day');
+
   const [taskModal, setTaskModal] = useState(false);
   const [noteModal, setNoteModal] = useState(false);
 
@@ -129,6 +132,7 @@ export default function Planner() {
               <FiPlus /> Nieuwe notitie
             </button>
           </div>
+
         </div>
         <div className="overflow-auto">
           {view === 'day' && <DayView />}
@@ -136,8 +140,10 @@ export default function Planner() {
           {view === 'month' && <MonthView />}
         </div>
       </section>
+
       <CreateTaskModal open={taskModal} onClose={() => setTaskModal(false)} onCreated={() => {}} />
       <CreateNoteModal open={noteModal} onClose={() => setNoteModal(false)} onCreated={() => {}} />
+
     </div>
   );
 }
