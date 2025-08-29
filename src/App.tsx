@@ -257,15 +257,15 @@ export default function App() {
            style={{backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,.25) 1px, transparent 1px)", backgroundSize:"24px 24px"}}/>
 
       {/* Top bar */}
-      <header className="sticky top-0 backdrop-blur-xl bg-white/5 border-b border-white/10 text-slate-100">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+        <header className="sticky top-0 backdrop-blur-xl bg-white/5 border-b border-white/10 text-slate-100">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3 sm:flex-nowrap">
           <div className="flex items-center gap-2 text-slate-100">
             <Rocket size={18} className="text-teal-300" />
             <span className="font-semibold tracking-wide">HabitFlow</span>
             <span className="text-xs text-slate-400">Tesla glass edition</span>
           </div>
 
-          <div className="ml-4 flex items-center gap-2">
+            <div className="ml-0 mt-2 flex items-center gap-2 sm:ml-4 sm:mt-0">
             <button onClick={()=>setView('notes')}
               className={cls("px-3 py-1.5 rounded-lg border text-sm inline-flex items-center gap-2",
                              view==='notes' ? "bg-white/15 border-white/25" : "bg-white/5 border-white/10 hover:bg-white/10")}>
@@ -278,14 +278,14 @@ export default function App() {
             </button>
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
+            <div className="ml-0 w-full flex items-center gap-2 sm:ml-auto sm:w-auto sm:justify-end">
             {view==='notes' && (
               <>
-                <div className="relative">
-                  <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/>
-                  <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Zoek notities…"
-                        className="pl-9 pr-3 py-2 w-64 rounded-xl bg-white/10 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"/>
-                </div>
+                  <div className="relative flex-1">
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/>
+                    <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Zoek notities…"
+                          className="pl-9 pr-3 py-2 w-full sm:w-64 rounded-xl bg-white/10 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"/>
+                  </div>
                 <button className="px-3 py-2 rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
                         onClick={()=>createNote("meeting")}>
                   <FiPlus/> Nieuwe notitie
@@ -303,10 +303,10 @@ export default function App() {
       </header>
 
       {/* Main */}
-      {view === 'notes' ? (
-        <div className="max-w-6xl mx-auto px-4 py-4 grid grid-cols-12 gap-4 text-slate-100">
-          {/* Sidebar */}
-          <aside className="col-span-4 lg:col-span-3 rounded-2xl p-3 backdrop-blur-xl bg-white/5 border border-white/10">
+        {view === 'notes' ? (
+          <div className="max-w-6xl mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-4 text-slate-100">
+            {/* Sidebar */}
+            <aside className="lg:col-span-3 rounded-2xl p-3 backdrop-blur-xl bg-white/5 border border-white/10 mb-4 lg:mb-0">
             <div className="grid grid-cols-2 gap-2">
               <select className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
                       value={habit}
@@ -357,7 +357,7 @@ export default function App() {
           </aside>
 
           {/* Editor */}
-          <section className="col-span-8 lg:col-span-9 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 min-h-[74vh] flex flex-col">
+            <section className="lg:col-span-9 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 min-h-[74vh] flex flex-col">
             {!current ? (
               <div className="m-auto text-center p-10">
                 <Sparkles className="mx-auto mb-3 text-teal-300"/>
