@@ -15,6 +15,18 @@ export async function createNote(input: NoteBase): Promise<Note> {
   });
   return r.json();
 }
+export async function updateNote(id: number, patch: Partial<NoteBase>): Promise<Note> {
+  const r = await fetch(`${BASE}/api/notes/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patch),
+  });
+  return r.json();
+}
+export async function deleteNote(id: number): Promise<{ deleted: boolean }> {
+  const r = await fetch(`${BASE}/api/notes/${id}`, { method: 'DELETE' });
+  return r.json();
+}
 
 // TASKS
 export async function fetchTasks(params: Record<string, string> = {}): Promise<Task[]> {

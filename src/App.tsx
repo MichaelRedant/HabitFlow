@@ -3,7 +3,7 @@ import TaskMatrix from './TaskMatrix';
 import CreateTaskModal from './CreateTaskModal';
 import { FiSearch, FiPlus, FiTrash2, FiCopy, FiCheck, FiClock } from "react-icons/fi";
 import { BookOpen, Rocket, Sparkles, Target, Timer, Tags, ListTodo, Grid3X3 } from "lucide-react";
-import { fetchNotes, createNote as apiCreateNote } from "./services/api";
+import { fetchNotes, createNote as apiCreateNote, updateNote as apiUpdateNote, deleteNote as apiDeleteNote } from "./services/api";
 import type { Note, HabitId, Quadrant } from "./types";
 
 const HABITS: {id: HabitId; name: string}[] = [
@@ -166,13 +166,30 @@ export default function App() {
 
   function update(patch: Partial<Note>) {
     if (!current) return;
-    setNotes(xs => xs.map(n => n.id === current.id ? { ...n, ...patch, updatedAt: Date.now() } : n));
+    const now = Date.now();
+    setNotes(xs => xs.map(n => n.id === current.id ? { ...n, ...patch, updatedAt: now } : n));
+    if (current.id > 0) {
+      apiUpdateNote(current.id, patch)
+        .catch((err) => { console.debug("updateNote failed:", err); });
+    }
   }
-  function remove(id: number) { setNotes(xs => xs.filter(n => n.id !== id)); if (selected === id) setSelected(null); }
+  function remove(id: number) {
+    setNotes(xs => xs.filter(n => n.id !== id));
+    if (selected === id) setSelected(null);
+    if (id > 0) {
+      apiDeleteNote(id).catch((err) => { console.debug("deleteNote failed:", err); });
+    }
+  }
   function duplicate(id: number) {
     const base = notes.find(n => n.id === id); if (!base) return;
-    const copy: Note = { ...base, id: -Date.now(), title: base.title + " (kopie)", createdAt: Date.now(), updatedAt: Date.now() };
+    const now = Date.now();
+    const tempId = -now;
+    const copyBase = { title: base.title + " (kopie)", content: base.content, habit: base.habit, quadrant: base.quadrant, tags: base.tags ?? [] };
+    const copy: Note = { id: tempId, ...copyBase, createdAt: now, updatedAt: now };
     setNotes(xs => [copy, ...xs]); setSelected(copy.id);
+    apiCreateNote(copyBase)
+      .then(saved => { setNotes(xs => xs.map(n => n.id === tempId ? { ...saved, tags: saved.tags ?? [] } : n)); setSelected(saved.id); })
+      .catch((err) => { console.debug("createNote failed:", err); });
   }
 
   return (

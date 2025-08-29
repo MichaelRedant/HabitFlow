@@ -1,49 +1,34 @@
 import { Router } from 'express';
-import { Task } from '../models/Task.js';
-import { computeQuadrant } from '../utils/quadrant.js';
+import { Note } from '../models/Note.js';
 
 const router = Router();
 
-// list met filters: ?quadrant=II&habit=3&status=todo
+// list notes with optional filters: ?habit=3&quadrant=II
 router.get('/', async (req, res) => {
   const where = {};
-  ['quadrant','habit','status'].forEach(k => { if (req.query[k]) where[k] = req.query[k]; });
-  const tasks = await Task.findAll({ where, order: [['updated_at','DESC']] });
-  res.json(tasks);
+  ['habit', 'quadrant'].forEach(k => { if (req.query[k]) where[k] = req.query[k]; });
+  const notes = await Note.findAll({ where, order: [['updated_at','DESC']] });
+  res.json(notes);
 });
 
-// create
+// create note
 router.post('/', async (req, res) => {
   const body = req.body || {};
-  const quadrant = computeQuadrant(body);
-  const task = await Task.create({ ...body, quadrant });
-  res.status(201).json(task);
+  const note = await Note.create(body);
+  res.status(201).json(note);
 });
 
-// update (recompute quadrant als velden wijzigen)
+// update note
 router.patch('/:id', async (req, res) => {
-  const task = await Task.findByPk(req.params.id);
-  if (!task) return res.status(404).json({ error: 'Not found' });
-
-  const next = { ...task.toJSON(), ...req.body };
-  next.quadrant = computeQuadrant(next);
-
-  await task.update(next);
-  res.json(task);
+  const note = await Note.findByPk(req.params.id);
+  if (!note) return res.status(404).json({ error: 'Not found' });
+  await note.update(req.body || {});
+  res.json(note);
 });
 
-// done/undone
-router.post('/:id/complete', async (req, res) => {
-  const task = await Task.findByPk(req.params.id);
-  if (!task) return res.status(404).json({ error: 'Not found' });
-  const done = !!req.body.done;
-  await task.update({ status: done ? 'done' : 'todo', completedAt: done ? new Date() : null });
-  res.json(task);
-});
-
-// delete
+// delete note
 router.delete('/:id', async (req, res) => {
-  const n = await Task.destroy({ where: { id: req.params.id }});
+  const n = await Note.destroy({ where: { id: req.params.id } });
   res.json({ deleted: n > 0 });
 });
 
