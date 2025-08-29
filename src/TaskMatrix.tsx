@@ -54,7 +54,7 @@ export default function TaskMatrix() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-4">
-      <div className="mb-3 flex items-center gap-2">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
         <select className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
                 value={habit} onChange={e=> setHabit(e.target.value==='all' ? 'all' : Number(e.target.value) as HabitId)}>
           <option value="all">Alle Habits</option>
@@ -69,7 +69,7 @@ export default function TaskMatrix() {
         {loading && <span className="text-xs text-slate-400">Laden…</span>}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <QuadrantCol title="Q I — Urgent & Belangrijk" tasks={grouped.I}
           onToggle={toggleDone} onQuickMove={quickMove} onAdjust={adjust} />
         <QuadrantCol title="Q II — Niet urgent & Belangrijk" tasks={grouped.II}
