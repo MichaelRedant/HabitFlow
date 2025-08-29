@@ -7,6 +7,7 @@ export type NoteBase = {
   habit?: HabitId | null;
   quadrant?: Quadrant | null;
   tags: string[];
+  scheduledAt?: string | null;
 };
 
 export type Note = NoteBase & {
