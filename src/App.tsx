@@ -437,7 +437,7 @@ export default function App() {
           <aside className="lg:col-span-3 rounded-2xl p-3 backdrop-blur-xl bg-white/5 border border-white/10 mb-4 lg:mb-0 flex flex-col min-h-0">
             <div className="grid grid-cols-2 gap-2">
               <select
-                className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
+                className="px-3 py-2 w-full rounded-xl bg-white/10 border border-white/10 text-sm"
                 value={habit}
                 onChange={(e) => {
                   const val = e.target.value;
@@ -450,7 +450,7 @@ export default function App() {
                 ))}
               </select>
               <select
-                className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
+                className="px-3 py-2 w-full rounded-xl bg-white/10 border border-white/10 text-sm"
                 value={quad}
                 onChange={(e) => setQuad(e.target.value as Quadrant | "all")}
               >
@@ -531,14 +531,14 @@ export default function App() {
             ) : (
               <>
                 {/* Editor topbar */}
-                <div className="p-3 border-b border-white/10 flex items-center gap-2">
+                <div className="p-3 border-b border-white/10 flex flex-wrap items-center gap-2">
                   <input
-                    className="flex-1 px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
+                    className="flex-1 min-w-full sm:min-w-0 px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
                     value={current.title}
                     onChange={(e) => update({ title: e.target.value })}
                   />
                   <select
-                    className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
+                    className="px-3 py-2 w-full sm:w-auto rounded-xl bg-white/10 border border-white/10 text-sm"
                     value={current.habit ?? 3}
                     onChange={(e) => update({ habit: Number(e.target.value) as HabitId })}
                   >
@@ -547,7 +547,7 @@ export default function App() {
                     ))}
                   </select>
                   <select
-                    className="px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-sm"
+                    className="px-3 py-2 w-full sm:w-auto rounded-xl bg-white/10 border border-white/10 text-sm"
                     value={current.quadrant ?? "II"}
                     onChange={(e) => update({ quadrant: e.target.value as Quadrant })}
                   >

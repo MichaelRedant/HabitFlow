@@ -60,7 +60,7 @@ export default function CreateTaskModal(
                     value={description} onChange={e=>setDescription(e.target.value)} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <select className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
+            <select className="px-3 py-2 w-full rounded-lg bg-white/10 border border-white/15"
                     value={habit === '' ? '' : habit}
                     onChange={e=> setHabit(e.target.value === '' ? '' : Number(e.target.value) as HabitId)}>
               <option value="">Habit (optioneel)</option>
