@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tesla/Apple glass vibe */
+:root { color-scheme: dark; }
+html, body, #root { height: 100%; }
+body {
+  @apply bg-slate-900 text-slate-100;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
