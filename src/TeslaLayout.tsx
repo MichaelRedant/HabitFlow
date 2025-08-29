@@ -99,6 +99,7 @@ export default function TeslaLayout() {
         {active === 'home' && <HomePage onSelect={setActive} />}
         {active === 'tasks' && <TaskMatrix />}
         {active === 'notes' && <App />}
+
         {active === 'help' && (
           <HelpPage
             onRestartOnboarding={() => {
@@ -107,6 +108,7 @@ export default function TeslaLayout() {
             }}
           />
         )}
+
         {active === 'profile' && (
           <div className="p-8">
             <section className="max-w-3xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">

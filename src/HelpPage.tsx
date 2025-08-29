@@ -1,4 +1,6 @@
+
 export default function HelpPage({ onRestartOnboarding }: { onRestartOnboarding: () => void }) {
+
   return (
     <div className="p-8">
       <section className="max-w-3xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
@@ -14,6 +16,7 @@ export default function HelpPage({ onRestartOnboarding }: { onRestartOnboarding:
         <p className="text-slate-300 mb-4">
           Orden je taken volgens de Eisenhower-matrix. Focus op de quadranten die echt impact hebben.
         </p>
+
         <div className="flex flex-col items-start gap-4">
           <button
             onClick={onRestartOnboarding}
@@ -35,6 +38,7 @@ export default function HelpPage({ onRestartOnboarding }: { onRestartOnboarding:
           </p>
           <p className="text-slate-300">Heb je vragen of feedback? Laat het ons weten!</p>
         </div>
+
       </section>
     </div>
   );
