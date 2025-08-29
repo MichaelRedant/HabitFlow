@@ -7,7 +7,9 @@ export default function TeslaLayout() {
       {/* Navigation bar */}
       <nav className="w-20 flex flex-col items-center py-6 bg-black/80 backdrop-blur-xl border-r border-white/10">
         <div className="mb-8 text-red-500 text-2xl font-bold">⚡</div>
-        <ul className="flex-1 flex flex-col gap-6">
+
+        <ul className="flex-1 flex flex-col gap-6 list-none">
+
           <li>
             <button className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition">
               <FiHome />
