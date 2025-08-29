@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import TaskMatrix from './TaskMatrix';
 import CreateTaskModal from './CreateTaskModal';
 import { FiSearch, FiPlus, FiTrash2, FiCopy, FiCheck, FiClock } from "react-icons/fi";
-import { BookOpen, Rocket, Sparkles, Target, Timer, Tags, ListTodo, Grid3X3 } from "lucide-react";
+import { BookOpen, Rocket, Sparkles, Target, Timer, Tags, ListTodo, Grid3X3, Compass, Calendar, CalendarDays } from "lucide-react";
 import { fetchNotes, createNote as apiCreateNote, updateNote as apiUpdateNote, deleteNote as apiDeleteNote } from "./services/api";
 import type { Note, HabitId, Quadrant } from "./types";
 
@@ -27,6 +27,54 @@ const STORAGE_KEY = "habitflow_notes_v1";
 const cls = (...xs: Array<string|false|undefined>) => xs.filter(Boolean).join(" ");
 
 const templates = {
+  mission(): Omit<Note, "id"|"createdAt"|"updatedAt"> {
+    return {
+      title: "Missie & Waarden",
+      content: `# Missie & Waarden
+## Missieverklaring
+
+## Kernwaarden
+- 
+
+## Rollen & Lange-termijn doelen
+- Ouder:
+- Professional:
+- Vriend:
+- Vrijwilliger:
+`,
+      habit: 2, quadrant: "II", tags: ["mission"],
+    };
+  },
+  year(): Omit<Note, "id"|"createdAt"|"updatedAt"> {
+    return {
+      title: `Jaarplanning — ${new Date().getFullYear()}`,
+      content: `# Jaarplanning
+## Doelen
+- 
+
+## Big Rocks per kwartaal
+- Q1:
+- Q2:
+- Q3:
+- Q4:
+`,
+      habit: 3, quadrant: "II", tags: ["year"],
+    };
+  },
+  month(): Omit<Note, "id"|"createdAt"|"updatedAt"> {
+    return {
+      title: `Maandplanning — ${new Date().toLocaleString('default',{ month: 'long', year: 'numeric'})}`,
+      content: `# Maandplanning
+## Prioriteiten
+- 
+
+## Reflectie
+- Wat ging goed?
+- Wat vraagt bijsturing?
+`,
+      habit: 3, quadrant: "II", tags: ["month"],
+    };
+  },
   meeting(): Omit<Note, "id"|"createdAt"|"updatedAt"> {
     return {
       title: `Meeting — ${new Date().toLocaleString()}`,
@@ -75,15 +123,24 @@ const templates = {
   },
   daily(): Omit<Note, "id"|"createdAt"|"updatedAt"> {
     return {
-      title: `Daily Big Rocks — ${new Date().toLocaleDateString()}`,
-      content: `# Daily Big Rocks
-## Top 3 (Habit 3)
-- [ ]  
-- [ ]  
-- [ ]  
+      title: `Dagplanning — ${new Date().toLocaleDateString()}`,
+      content: `# Dagplanning
+## Dankbaarheid / Inspiratie
+- 
 
-## Notities
--  `,
+## Top 3 prioriteiten (Habit 3)
+- [ ]
+- [ ]
+- [ ]
+
+## Tijdsblokken
+- 08:00-
+- 12:00-
+- 16:00-
+
+## Notities & Reflectie
+- 
+`,
       habit: 3, quadrant: "II", tags: ["daily"],
     };
   },
@@ -268,9 +325,12 @@ export default function App() {
             </div>
 
             <div className="mt-3 flex flex-wrap gap-2">
-              <GlassButton onClick={()=>createNote("meeting")} icon={<BookOpen size={16}/>}>Meeting</GlassButton>
+              <GlassButton onClick={()=>createNote("mission")} icon={<Compass size={16}/>}>Missie</GlassButton>
+              <GlassButton onClick={()=>createNote("year")}    icon={<Calendar size={16}/>}>Jaar</GlassButton>
+              <GlassButton onClick={()=>createNote("month")}   icon={<CalendarDays size={16}/>}>Maand</GlassButton>
               <GlassButton onClick={()=>createNote("weekly")}  icon={<Target size={16}/>}>Weekly</GlassButton>
               <GlassButton onClick={()=>createNote("daily")}   icon={<Timer size={16}/>}>Daily</GlassButton>
+              <GlassButton onClick={()=>createNote("meeting")} icon={<BookOpen size={16}/>}>Meeting</GlassButton>
             </div>
 
             <div className="mt-3 h-[64vh] overflow-auto pr-1">
