@@ -1,19 +1,48 @@
-import type { Note } from '../types';
+import type { Note, NoteBase, Task, TaskBase } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
+// NOTES
 export async function fetchNotes(): Promise<Note[]> {
-  const res = await fetch(`${API_BASE}/notes`);
-  if (!res.ok) throw new Error('Failed to fetch notes');
-  return res.json();
+  const r = await fetch(`${BASE}/api/notes`);
+  return r.json();
 }
-
-export async function createNote(data: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {
-  const res = await fetch(`${API_BASE}/notes`, {
+export async function createNote(input: NoteBase): Promise<Note> {
+  const r = await fetch(`${BASE}/api/notes`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: JSON.stringify(input),
   });
-  if (!res.ok) throw new Error('Failed to create note');
-  return res.json();
+  return r.json();
+}
+
+// TASKS
+export async function fetchTasks(params: Record<string, string> = {}): Promise<Task[]> {
+  const qs = new URLSearchParams(params).toString();
+  const r = await fetch(`${BASE}/api/tasks${qs ? `?${qs}` : ''}`);
+  return r.json();
+}
+export async function createTask(input: Partial<TaskBase>): Promise<Task> {
+  const r = await fetch(`${BASE}/api/tasks`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  return r.json();
+}
+export async function updateTask(id: number, patch: Partial<TaskBase>): Promise<Task> {
+  const r = await fetch(`${BASE}/api/tasks/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patch),
+  });
+  return r.json();
+}
+export async function completeTask(id: number, done = true): Promise<Task> {
+  const r = await fetch(`${BASE}/api/tasks/${id}/complete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ done }),
+  });
+  return r.json();
 }
