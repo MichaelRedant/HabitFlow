@@ -1,5 +1,10 @@
 import { useState } from 'react';
 
+import { FiPlus } from 'react-icons/fi';
+import CreateTaskModal from './CreateTaskModal';
+import CreateNoteModal from './CreateNoteModal';
+
+
 const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).join(' ');
 
 function DayView() {
@@ -76,37 +81,58 @@ function MonthView() {
 
 export default function Planner() {
   const [view, setView] = useState<'day' | 'week' | 'month'>('day');
+
+  const [taskModal, setTaskModal] = useState(false);
+  const [noteModal, setNoteModal] = useState(false);
+
   return (
     <div className="p-8">
       <section className="max-w-5xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
-        <div className="mb-4 flex gap-2">
-          <button
-            className={cls(
-              'px-4 py-2 rounded-lg text-sm transition',
-              view === 'day' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
-            )}
-            onClick={() => setView('day')}
-          >
-            Dag
-          </button>
-          <button
-            className={cls(
-              'px-4 py-2 rounded-lg text-sm transition',
-              view === 'week' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
-            )}
-            onClick={() => setView('week')}
-          >
-            Week
-          </button>
-          <button
-            className={cls(
-              'px-4 py-2 rounded-lg text-sm transition',
-              view === 'month' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
-            )}
-            onClick={() => setView('month')}
-          >
-            Maand
-          </button>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex gap-2">
+            <button
+              className={cls(
+                'px-4 py-2 rounded-lg text-sm transition',
+                view === 'day' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
+              )}
+              onClick={() => setView('day')}
+            >
+              Dag
+            </button>
+            <button
+              className={cls(
+                'px-4 py-2 rounded-lg text-sm transition',
+                view === 'week' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
+              )}
+              onClick={() => setView('week')}
+            >
+              Week
+            </button>
+            <button
+              className={cls(
+                'px-4 py-2 rounded-lg text-sm transition',
+                view === 'month' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
+              )}
+              onClick={() => setView('month')}
+            >
+              Maand
+            </button>
+          </div>
+          <div className="flex gap-2">
+            <button
+              className="px-3 py-2 rounded-lg bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
+              onClick={() => setTaskModal(true)}
+            >
+              <FiPlus /> Nieuwe taak
+            </button>
+            <button
+              className="px-3 py-2 rounded-lg bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
+              onClick={() => setNoteModal(true)}
+            >
+              <FiPlus /> Nieuwe notitie
+            </button>
+          </div>
+
         </div>
         <div className="overflow-auto">
           {view === 'day' && <DayView />}
@@ -114,6 +140,10 @@ export default function Planner() {
           {view === 'month' && <MonthView />}
         </div>
       </section>
+
+      <CreateTaskModal open={taskModal} onClose={() => setTaskModal(false)} onCreated={() => {}} />
+      <CreateNoteModal open={noteModal} onClose={() => setNoteModal(false)} onCreated={() => {}} />
+
     </div>
   );
 }
