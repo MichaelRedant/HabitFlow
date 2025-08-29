@@ -1,8 +1,11 @@
+
 import { useEffect, useState } from 'react';
+
 import { createNote } from './services/api';
 import type { Note } from './types';
 
 export default function CreateNoteModal(
+
   { open, onClose, onCreated, initialDate }:
   { open: boolean; onClose: () => void; onCreated: (n: Note) => void; initialDate?: Date | null }
 ) {
@@ -16,6 +19,7 @@ export default function CreateNoteModal(
     }
   }, [open, initialDate]);
 
+
   if (!open) return null;
 
   async function submit() {
@@ -23,14 +27,18 @@ export default function CreateNoteModal(
       title: title.trim(),
       content: content.trim() || undefined,
       tags: [] as string[],
+
       scheduledAt: scheduled ? new Date(scheduled).toISOString() : null,
+
     };
     const created = await createNote(input);
     onCreated(created);
     onClose();
     setTitle('');
     setContent('');
+
     setScheduled('');
+
   }
 
   return (
@@ -54,12 +62,14 @@ export default function CreateNoteModal(
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
+
           <input
             type="datetime-local"
             className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
             value={scheduled}
             onChange={(e) => setScheduled(e.target.value)}
           />
+
           <div className="flex justify-end gap-2 mt-2">
             <button onClick={onClose} className="px-3 py-2 rounded-lg bg-white/10 border border-white/15">
               Annuleren
