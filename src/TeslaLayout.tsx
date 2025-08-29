@@ -1,7 +1,16 @@
 import { useState } from 'react';
-import { FiHome, FiCalendar, FiFileText, FiUser, FiSettings, FiHelpCircle } from 'react-icons/fi';
+import {
+  FiHome,
+  FiCalendar,
+  FiFileText,
+  FiUser,
+  FiSettings,
+  FiHelpCircle,
+  FiGrid,
+} from 'react-icons/fi';
 import StartScreen from './StartScreen';
 import TaskMatrix from './TaskMatrix';
+import Planner from './Planner';
 import App from './App';
 import HomePage from './HomePage';
 import Onboarding from './Onboarding';
@@ -11,7 +20,9 @@ const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).joi
 
 export default function TeslaLayout() {
   const [started, setStarted] = useState(false);
-  const [active, setActive] = useState<'home' | 'tasks' | 'notes' | 'profile' | 'help'>('home');
+  const [active, setActive] = useState<
+    'home' | 'tasks' | 'planner' | 'notes' | 'profile' | 'help'
+  >('home');
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem('hf.onboarded'));
 
   if (!started) {
@@ -43,6 +54,17 @@ export default function TeslaLayout() {
                 active === 'tasks' ? 'bg-white/20 text-teal-300' : 'bg-white/5 hover:bg-white/10'
               )}
               onClick={() => setActive('tasks')}
+            >
+              <FiGrid />
+            </button>
+          </li>
+          <li>
+            <button
+              className={cls(
+                'p-3 rounded-xl transition',
+                active === 'planner' ? 'bg-white/20 text-teal-300' : 'bg-white/5 hover:bg-white/10'
+              )}
+              onClick={() => setActive('planner')}
             >
               <FiCalendar />
             </button>
@@ -98,6 +120,7 @@ export default function TeslaLayout() {
         />
         {active === 'home' && <HomePage onSelect={setActive} />}
         {active === 'tasks' && <TaskMatrix />}
+        {active === 'planner' && <Planner />}
         {active === 'notes' && <App />}
 
         {active === 'help' && (
