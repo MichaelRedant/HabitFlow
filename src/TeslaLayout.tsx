@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { FiHome, FiCalendar, FiFileText, FiUser, FiSettings } from 'react-icons/fi';
+import { FiHome, FiCalendar, FiFileText, FiUser, FiSettings, FiHelpCircle } from 'react-icons/fi';
 import StartScreen from './StartScreen';
 import TaskMatrix from './TaskMatrix';
 import App from './App';
 import HomePage from './HomePage';
+import Onboarding from './Onboarding';
+import HelpPage from './HelpPage';
 
 const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).join(' ');
 
 export default function TeslaLayout() {
   const [started, setStarted] = useState(false);
-  const [active, setActive] = useState<'home' | 'tasks' | 'notes' | 'profile'>('home');
+  const [active, setActive] = useState<'home' | 'tasks' | 'notes' | 'profile' | 'help'>('home');
+  const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem('hf.onboarded'));
 
   if (!started) {
     return <StartScreen onStart={() => setStarted(true)} />;
@@ -59,6 +62,17 @@ export default function TeslaLayout() {
             <button
               className={cls(
                 'p-3 rounded-xl transition',
+                active === 'help' ? 'bg-white/20 text-teal-300' : 'bg-white/5 hover:bg-white/10'
+              )}
+              onClick={() => setActive('help')}
+            >
+              <FiHelpCircle />
+            </button>
+          </li>
+          <li>
+            <button
+              className={cls(
+                'p-3 rounded-xl transition',
                 active === 'profile' ? 'bg-white/20 text-teal-300' : 'bg-white/5 hover:bg-white/10'
               )}
               onClick={() => setActive('profile')}
@@ -85,6 +99,7 @@ export default function TeslaLayout() {
         {active === 'home' && <HomePage onSelect={setActive} />}
         {active === 'tasks' && <TaskMatrix />}
         {active === 'notes' && <App />}
+        {active === 'help' && <HelpPage />}
         {active === 'profile' && (
           <div className="p-8">
             <section className="max-w-3xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
@@ -94,6 +109,7 @@ export default function TeslaLayout() {
           </div>
         )}
       </main>
+      {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
     </div>
   );
 }
