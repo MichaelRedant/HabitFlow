@@ -17,6 +17,7 @@ interface PlannerEvent {
   time?: string; // HH:MM
 }
 
+
 function DayView({
   current,
   events,
@@ -31,12 +32,15 @@ function DayView({
   const hours = Array.from({ length: 17 }, (_, i) => i + 6); // 06:00-22:00
   const currentIso = current.toISOString().slice(0, 10);
 
+
   return (
     <div className="grid grid-cols-[60px_1fr] gap-x-4 text-sm">
       {hours.map((h) => {
         const evs = events.filter(
           (ev) =>
+
             ev.date === currentIso &&
+
             ev.time &&
             Number(ev.time.slice(0, 2)) === h
         );
@@ -46,6 +50,7 @@ function DayView({
 
             <div
               className="border-b border-slate-700 h-12 cursor-pointer relative"
+
               onClick={() =>
                 onQuickAdd(
                   new Date(
@@ -68,6 +73,7 @@ function DayView({
                   e
                 );
               }}
+
             >
               {evs.map((ev) => (
                 <div
@@ -87,6 +93,7 @@ function DayView({
 }
 
 
+
 function WeekView({
   current,
   events,
@@ -98,6 +105,7 @@ function WeekView({
   onQuickAdd: (date: Date) => void;
   onMenu: (date: Date, e: React.MouseEvent) => void;
 }) {
+
   const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   const hours = Array.from({ length: 17 }, (_, i) => i + 6);
   const now = new Date();
@@ -147,11 +155,13 @@ function WeekView({
               <div
                 key={i}
                 className="border-l border-t border-slate-700 h-12 cursor-pointer relative"
+
                 onClick={() => onQuickAdd(new Date(d))}
                 onContextMenu={(e) => {
                   e.preventDefault();
                   onMenu(new Date(d), e);
                 }}
+
               >
                 {evs.map((ev) => (
                   <div
@@ -172,6 +182,7 @@ function WeekView({
 }
 
 
+
 function MonthView({
   current,
   events,
@@ -183,6 +194,7 @@ function MonthView({
   onQuickAdd: (date: Date) => void;
   onMenu: (date: Date, e: React.MouseEvent) => void;
 }) {
+
   const now = new Date();
   const year = current.getFullYear();
   const month = current.getMonth();
@@ -253,6 +265,7 @@ export default function Planner() {
       return [];
     }
   });
+
 
   useEffect(() => {
     try {
@@ -398,6 +411,7 @@ export default function Planner() {
           </div>
         </div>
         <div className="overflow-auto">
+
           {view === 'day' && (
             <DayView
               current={current}
@@ -422,6 +436,7 @@ export default function Planner() {
               onMenu={handleMenu}
             />
           )}
+
         </div>
       </section>
       {menu && (
