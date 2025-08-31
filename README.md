@@ -1,13 +1,34 @@
 # HabitFlow
 
-HabitFlow is a React + TypeScript application built with Vite. It helps you capture notes and manage tasks using an Eisenhower matrix. Notes support markdown, tags, AI summaries and can be removed when no longer needed.
+HabitFlow is een **React + TypeScript** app (Vite) met een **Tesla-2025 look**: glassmorphism, neon-blauwe accenten en soepele animaties. Ze combineert snelle notities met **AI-assistentie** en een **Eisenhower-matrix** in de geest van **Covey’s 7 Habits**.
 
-## Available Scripts
+## ✨ Features
 
-- `npm run dev` – start the development server
-- `npm run lint` – run ESLint checks
-- `npm run build` – type-check and build for production
+- **Notities**: eenvoudige editor (markdown-friendly), auto-save, zoeken, tags. d
+- **AI-integratie**:
+  - Detecteert **acties** in vrije tekst.
+  - Classificeert in **Habit (1–7)** en **Quadrant (I–IV)**.
+  - Genereert **samenvattingen** en **prioriteringstips** (“Begin with the end in mind”, “Put first things first”).
+- **Planner**:
+  - **Dag**: timeline met tijdslots.
+  - **Week**: grid per rol/doel.
+  - **Maand**: kalenderoverzicht.
+  - Drag-and-drop tussen views (optioneel via dnd-kit).
+- **Matrix**: visuele Eisenhower-matrix met hover-interacties.
+- **Vlaams taalgebruik**: “Takenlijst”, “Weekplanner”, “Herinnering”.
+- **Design**: Dark mode standaard, glass cards, subtiele vonken/aurora-achtergronden.
 
-## Development Notes
+## 🧩 Tech Stack
 
-This project uses Tailwind CSS for styling and stores planner data in local storage.
+- **Frontend:** React 19, Vite 7, TypeScript 5, Tailwind CSS 4, lucide-react.
+- **Backend:** Node/Express, Sequelize, MySQL (Vimexx).
+- **AI:** OpenAI Responses API (server-side), Embeddings voor zoek.
+- **State:** Planner in `localStorage`, notities via API; UI-state met React hooks.
+
+## 🚀 Getting Started
+
+### 1) Clone & install
+```bash
+git clone https://github.com/MichaelRedant/HabitFlow.git
+cd HabitFlow
+npm install
