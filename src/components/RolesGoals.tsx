@@ -41,27 +41,33 @@ export default function RolesGoals() {
   };
 
   return (
-    <div className="space-y-4" aria-label="roles and goals">
-      <h2 className="text-xl font-semibold">Weekly Compass</h2>
+
+    <div className="space-y-4" aria-label="rollen en doelen">
+      <h2 className="text-xl font-semibold">Weekkompas</h2>
+
       <div className="space-y-2">
         <input
           type="text"
           value={roleTitle}
           onChange={(e) => setRoleTitle(e.target.value)}
-          placeholder="Role title"
+
+          placeholder="Rol titel"
           className="border p-1 w-full"
-          aria-label="new role title"
+          aria-label="titel nieuwe rol"
+
         />
         <input
           type="text"
           value={roleDesc}
           onChange={(e) => setRoleDesc(e.target.value)}
-          placeholder="Role description"
+
+          placeholder="Rol beschrijving"
           className="border p-1 w-full"
-          aria-label="new role description"
+          aria-label="beschrijving nieuwe rol"
         />
         <button onClick={addRole} className="bg-blue-600 text-white px-2 py-1 rounded">
-          Add Role
+          Voeg rol toe
+
         </button>
       </div>
       <div className="space-y-4">
@@ -78,9 +84,11 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
   const goals = state.goals.filter((g) => g.roleId === role.id && g.week === week);
   const [text, setText] = useState('');
   return (
-    <div className="border p-2 rounded" aria-label={`role ${role.title}`}>
+
+    <div className="border p-2 rounded" aria-label={`rol ${role.title}`}>
       <h3 className="font-medium">{role.title}</h3>
-      <p className="text-sm text-gray-600">{role.description}</p>
+      <p className="text-sm text-gray-400">{role.description}</p>
+
       <ul className="list-disc ml-5 mt-2">
         {goals.map((g) => (
           <li key={g.id}>{g.description}</li>
@@ -91,8 +99,10 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
           className="border p-1 flex-1"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Weekly goal"
-          aria-label={`goal for ${role.title}`}
+
+          placeholder="Weekdoel"
+          aria-label={`doel voor ${role.title}`}
+
         />
         <button
           className="bg-green-600 text-white px-2 py-1 rounded"
@@ -101,7 +111,9 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
             setText('');
           }}
         >
-          Add
+
+          Voeg toe
+
         </button>
       </div>
     </div>

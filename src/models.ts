@@ -24,6 +24,10 @@ export interface Note {
   tags: string[];
   linkedGoalId?: string;
   linkedWeek?: string; // week label
+
+  urgent: boolean;
+  important: boolean;
+
 }
 
 export interface Task {

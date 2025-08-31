@@ -10,6 +10,10 @@ function isoWeekLabel(date = new Date()) {
   return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
 }
 
+
+type Area = 'physical' | 'mental' | 'emotional' | 'spiritual';
+
+
 export default function SharpenSaw() {
   const { state, setState } = usePlanner();
   const week = isoWeekLabel();
@@ -30,27 +34,37 @@ export default function SharpenSaw() {
     });
   };
 
-  const count = (['physical', 'mental', 'emotional', 'spiritual'] as Array<keyof Renewal>)
-    .filter((k) => renewal[k]).length;
+
+  const areas: Area[] = ['physical', 'mental', 'emotional', 'spiritual'];
+  const count = areas.filter((k) => renewal[k]).length;
   const progress = (count / 4) * 100;
+  const labels: Record<Area, string> = {
+    physical: 'Fysiek',
+    mental: 'Mentaal',
+    emotional: 'Emotioneel/Sociaal',
+    spiritual: 'Spiritueel',
+  };
 
   return (
-    <div className="space-y-4" aria-label="sharpen the saw tracker">
-      <h2 className="text-xl font-semibold">Sharpen the Saw</h2>
+    <div className="space-y-4" aria-label="zaag scherpen">
+      <h2 className="text-xl font-semibold">Zaag Scherpen</h2>
       <div className="space-y-2">
-        {(['physical', 'mental', 'emotional', 'spiritual'] as const).map((area) => (
+        {areas.map((area) => (
+
           <label key={area} className="flex items-center space-x-2">
             <input
               type="checkbox"
               checked={renewal[area]}
               onChange={() => update(area)}
-              aria-label={area}
+
+              aria-label={labels[area]}
             />
-            <span className="capitalize">{area}</span>
+            <span>{labels[area]}</span>
           </label>
         ))}
       </div>
-      <div className="w-full bg-gray-200 rounded h-2" aria-label="progress">
+      <div className="w-full bg-gray-700 rounded h-2" aria-label="voortgang">
+
         <div className="bg-green-600 h-2 rounded" style={{ width: `${progress}%` }} />
       </div>
     </div>
