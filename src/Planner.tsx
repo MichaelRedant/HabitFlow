@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import type React from 'react';
 
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import CreateTaskModal from './CreateTaskModal';
 import CreateNoteModal from './CreateNoteModal';
 
@@ -17,17 +17,30 @@ interface PlannerEvent {
   time?: string; // HH:MM
 }
 
-function DayView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (date: Date, e: React.MouseEvent) => void }) {
+
+function DayView({
+  current,
+  events,
+  onQuickAdd,
+  onMenu,
+}: {
+  current: Date;
+  events: PlannerEvent[];
+  onQuickAdd: (date: Date) => void;
+  onMenu: (date: Date, e: React.MouseEvent) => void;
+}) {
   const hours = Array.from({ length: 17 }, (_, i) => i + 6); // 06:00-22:00
-  const today = new Date();
-  const todayIso = today.toISOString().slice(0, 10);
+  const currentIso = current.toISOString().slice(0, 10);
+
 
   return (
     <div className="grid grid-cols-[60px_1fr] gap-x-4 text-sm">
       {hours.map((h) => {
         const evs = events.filter(
           (ev) =>
-            ev.date === todayIso &&
+
+            ev.date === currentIso &&
+
             ev.time &&
             Number(ev.time.slice(0, 2)) === h
         );
@@ -37,17 +50,30 @@ function DayView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (date
 
             <div
               className="border-b border-slate-700 h-12 cursor-pointer relative"
-              onClick={(e) =>
-                onSelect(
+
+              onClick={() =>
+                onQuickAdd(
                   new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate(),
+                    current.getFullYear(),
+                    current.getMonth(),
+                    current.getDate(),
+                    h
+                  )
+                )
+              }
+              onContextMenu={(e) => {
+                e.preventDefault();
+                onMenu(
+                  new Date(
+                    current.getFullYear(),
+                    current.getMonth(),
+                    current.getDate(),
                     h
                   ),
                   e
-                )
-              }
+                );
+              }}
+
             >
               {evs.map((ev) => (
                 <div
@@ -67,12 +93,24 @@ function DayView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (date
 }
 
 
-function WeekView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (date: Date, e: React.MouseEvent) => void }) {
+
+function WeekView({
+  current,
+  events,
+  onQuickAdd,
+  onMenu,
+}: {
+  current: Date;
+  events: PlannerEvent[];
+  onQuickAdd: (date: Date) => void;
+  onMenu: (date: Date, e: React.MouseEvent) => void;
+}) {
+
   const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   const hours = Array.from({ length: 17 }, (_, i) => i + 6);
   const now = new Date();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const monday = new Date(current);
+  monday.setDate(current.getDate() - ((current.getDay() + 6) % 7));
 
   return (
     <div className="grid grid-cols-[60px_repeat(7,1fr)] text-sm">
@@ -117,7 +155,13 @@ function WeekView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (dat
               <div
                 key={i}
                 className="border-l border-t border-slate-700 h-12 cursor-pointer relative"
-                onClick={(e) => onSelect(d, e)}
+
+                onClick={() => onQuickAdd(new Date(d))}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  onMenu(new Date(d), e);
+                }}
+
               >
                 {evs.map((ev) => (
                   <div
@@ -138,11 +182,22 @@ function WeekView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (dat
 }
 
 
-function MonthView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (date: Date, e: React.MouseEvent) => void }) {
+
+function MonthView({
+  current,
+  events,
+  onQuickAdd,
+  onMenu,
+}: {
+  current: Date;
+  events: PlannerEvent[];
+  onQuickAdd: (date: Date) => void;
+  onMenu: (date: Date, e: React.MouseEvent) => void;
+}) {
 
   const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
+  const year = current.getFullYear();
+  const month = current.getMonth();
   const first = new Date(year, month, 1);
   const start = (first.getDay() + 6) % 7; // maandag = 0
   const cells = Array.from({ length: 42 }, (_, i) => {
@@ -172,7 +227,11 @@ function MonthView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (da
               c.current ? '' : 'bg-white/5 text-slate-500',
               isToday && 'bg-teal-500/20 text-teal-200'
             )}
-            onClick={(e) => onSelect(new Date(c.date), e)}
+            onClick={() => onQuickAdd(new Date(c.date))}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              onMenu(new Date(c.date), e);
+            }}
           >
             <div className="text-right text-xs">{c.date.getDate()}</div>
             {evs.slice(0, 3).map((ev) => (
@@ -192,6 +251,7 @@ function MonthView({ events, onSelect }: { events: PlannerEvent[]; onSelect: (da
 
 export default function Planner() {
   const [view, setView] = useState<'day' | 'week' | 'month'>('day');
+  const [current, setCurrent] = useState(new Date());
 
   const [taskModal, setTaskModal] = useState(false);
   const [noteModal, setNoteModal] = useState(false);
@@ -206,6 +266,7 @@ export default function Planner() {
     }
   });
 
+
   useEffect(() => {
     try {
       localStorage.setItem('hf.events', JSON.stringify(events));
@@ -218,15 +279,86 @@ export default function Planner() {
     setEvents((prev) => [...prev, ev]);
   }
 
-  function handleSelect(date: Date, e: React.MouseEvent) {
+  function handleQuickAdd(date: Date) {
+    setSelectedDate(date);
+    setNoteModal(true);
+  }
+
+  function handleMenu(date: Date, e: React.MouseEvent) {
     setMenu({ date, x: e.clientX, y: e.clientY });
   }
 
+  function prev() {
+    const d = new Date(current);
+    if (view === 'day') d.setDate(d.getDate() - 1);
+    if (view === 'week') d.setDate(d.getDate() - 7);
+    if (view === 'month') d.setMonth(d.getMonth() - 1);
+    setCurrent(d);
+  }
+
+  function next() {
+    const d = new Date(current);
+    if (view === 'day') d.setDate(d.getDate() + 1);
+    if (view === 'week') d.setDate(d.getDate() + 7);
+    if (view === 'month') d.setMonth(d.getMonth() + 1);
+    setCurrent(d);
+  }
+
+  function today() {
+    setCurrent(new Date());
+  }
+
+  let label = '';
+  if (view === 'day') {
+    label = current.toLocaleDateString('nl-BE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  } else if (view === 'week') {
+    const monday = new Date(current);
+    monday.setDate(current.getDate() - ((current.getDay() + 6) % 7));
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    label = `${monday.toLocaleDateString('nl-BE', { day: 'numeric', month: 'short' })} – ${sunday.toLocaleDateString('nl-BE', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })}`;
+  } else {
+    label = current.toLocaleDateString('nl-BE', {
+      month: 'long',
+      year: 'numeric',
+    });
+  }
 
   return (
-    <div className="p-8">
+    <div className="min-h-screen p-8 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-slate-100">
       <section className="max-w-5xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <button
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20"
+              onClick={prev}
+            >
+              <FiChevronLeft />
+            </button>
+            <button
+              className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm"
+              onClick={today}
+            >
+              Vandaag
+            </button>
+            <button
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20"
+              onClick={next}
+            >
+              <FiChevronRight />
+            </button>
+            <span className="ml-4 font-semibold capitalize">{label}</span>
+          </div>
+
           <div className="flex gap-2">
             <button
               className={cls(
@@ -256,36 +388,55 @@ export default function Planner() {
               Maand
             </button>
           </div>
+
           <div className="flex gap-2">
             <button
               className="px-3 py-2 rounded-lg bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
-
               onClick={() => {
                 setSelectedDate(new Date());
                 setTaskModal(true);
               }}
-
             >
               <FiPlus /> Nieuwe taak
             </button>
             <button
               className="px-3 py-2 rounded-lg bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
-
               onClick={() => {
                 setSelectedDate(new Date());
                 setNoteModal(true);
               }}
-
             >
               <FiPlus /> Nieuwe notitie
             </button>
           </div>
-
         </div>
         <div className="overflow-auto">
-          {view === 'day' && <DayView events={events} onSelect={handleSelect} />}
-          {view === 'week' && <WeekView events={events} onSelect={handleSelect} />}
-          {view === 'month' && <MonthView events={events} onSelect={handleSelect} />}
+
+          {view === 'day' && (
+            <DayView
+              current={current}
+              events={events}
+              onQuickAdd={handleQuickAdd}
+              onMenu={handleMenu}
+            />
+          )}
+          {view === 'week' && (
+            <WeekView
+              current={current}
+              events={events}
+              onQuickAdd={handleQuickAdd}
+              onMenu={handleMenu}
+            />
+          )}
+          {view === 'month' && (
+            <MonthView
+              current={current}
+              events={events}
+              onQuickAdd={handleQuickAdd}
+              onMenu={handleMenu}
+            />
+          )}
+
         </div>
       </section>
       {menu && (
@@ -354,7 +505,6 @@ export default function Planner() {
         }}
         initialDate={selectedDate}
       />
-
     </div>
   );
 }
