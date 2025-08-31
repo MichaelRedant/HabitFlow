@@ -4,7 +4,7 @@ HabitFlow is een **React + TypeScript** app (Vite) met een **Tesla-2025 look**: 
 
 ## ✨ Features
 
-- **Notities**: eenvoudige editor (markdown-friendly), auto-save, zoeken, tags. d
+- **Notities**: eenvoudige editor (markdown-friendly), auto-save, zoeken, tags.
 - **AI-integratie**:
   - Detecteert **acties** in vrije tekst.
   - Classificeert in **Habit (1–7)** en **Quadrant (I–IV)**.
@@ -15,6 +15,8 @@ HabitFlow is een **React + TypeScript** app (Vite) met een **Tesla-2025 look**: 
   - **Maand**: kalenderoverzicht.
   - Drag-and-drop tussen views (optioneel via dnd-kit).
 - **Matrix**: visuele Eisenhower-matrix met hover-interacties.
+- **Missie & Waarden**: noteer je persoonlijke missie en kernwaarden met duidelijke hints.
+- **Onboarding & Help**: interactieve gids voor nieuwe gebruikers, altijd opnieuw te starten.
 - **Vlaams taalgebruik**: “Takenlijst”, “Weekplanner”, “Herinnering”.
 - **Design**: Dark mode standaard, glass cards, subtiele vonken/aurora-achtergronden.
 
@@ -32,3 +34,10 @@ HabitFlow is een **React + TypeScript** app (Vite) met een **Tesla-2025 look**: 
 git clone https://github.com/MichaelRedant/HabitFlow.git
 cd HabitFlow
 npm install
+```
+
+### 2) Start development server
+
+```bash
+npm run dev
+```

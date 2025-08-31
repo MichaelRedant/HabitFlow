@@ -16,11 +16,16 @@ export default function HelpPage({ onRestartOnboarding }: { onRestartOnboarding:
         <p className="text-slate-300 mb-4">
           Orden je taken volgens de Eisenhower-matrix. Focus op de quadranten die echt impact hebben.
         </p>
+        <h2 className="text-xl font-semibold mt-6 mb-2">Missie & Waarden</h2>
+        <p className="text-slate-300 mb-4">
+          Bepaal je richting door je persoonlijke missie en kernwaarden in te vullen in de zijbalk.
+        </p>
 
         <div className="flex flex-col items-start gap-4">
           <button
             onClick={onRestartOnboarding}
             className="px-4 py-2 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-teal-300/30"
+            title="Start de rondleiding opnieuw"
           >
             Onboarding opnieuw starten
           </button>
