@@ -51,11 +51,25 @@ function WeekView({ onSelect }: { onSelect: (date: Date, e: React.MouseEvent) =>
   return (
     <div className="grid grid-cols-[60px_repeat(7,1fr)] text-sm">
       <div />
-      {days.map((d) => (
-        <div key={d} className="text-center font-medium py-2 border-l border-slate-700">
-          {d}
-        </div>
-      ))}
+      {days.map((d, i) => {
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + i);
+        const isToday =
+          date.getDate() === now.getDate() &&
+          date.getMonth() === now.getMonth() &&
+          date.getFullYear() === now.getFullYear();
+        return (
+          <div
+            key={d}
+            className={cls(
+              'text-center font-medium py-2 border-l border-slate-700',
+              isToday && 'bg-teal-500/20 text-teal-200'
+            )}
+          >
+            {d} {date.getDate()}/{date.getMonth() + 1}
+          </div>
+        );
+      })}
       {hours.map((h) => (
         <div key={h} className="contents">
           <div className="text-right pr-2 text-slate-400 border-t border-slate-700">
@@ -101,20 +115,25 @@ function MonthView({ onSelect }: { onSelect: (date: Date, e: React.MouseEvent) =
           {d}
         </div>
       ))}
-      {cells.map((c, i) => (
-        <div
-          key={i}
-          className={cls(
-
-            'h-24 border-b border-r border-slate-700 p-1 cursor-pointer',
-            c.current ? '' : 'bg-white/5 text-slate-500'
-          )}
-          onClick={(e) => onSelect(new Date(c.date), e)}
-
-        >
-          <div className="text-right text-xs">{c.date.getDate()}</div>
-        </div>
-      ))}
+      {cells.map((c, i) => {
+        const isToday =
+          c.date.getDate() === now.getDate() &&
+          c.date.getMonth() === now.getMonth() &&
+          c.date.getFullYear() === now.getFullYear();
+        return (
+          <div
+            key={i}
+            className={cls(
+              'h-24 border-b border-r border-slate-700 p-1 cursor-pointer',
+              c.current ? '' : 'bg-white/5 text-slate-500',
+              isToday && 'bg-teal-500/20 text-teal-200'
+            )}
+            onClick={(e) => onSelect(new Date(c.date), e)}
+          >
+            <div className="text-right text-xs">{c.date.getDate()}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }
