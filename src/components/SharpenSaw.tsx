@@ -1,14 +1,6 @@
 import { usePlanner } from '../PlannerContext';
 import type { Renewal } from '../models';
-
-function isoWeekLabel(date = new Date()) {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
-  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
-}
+import { isoWeekLabel } from '../utils/date';
 
 
 type Area = 'physical' | 'mental' | 'emotional' | 'spiritual';
@@ -44,29 +36,40 @@ export default function SharpenSaw() {
     emotional: 'Emotioneel/Sociaal',
     spiritual: 'Spiritueel',
   };
+  const tips: Record<Area, string> = {
+    physical: 'Sport, slaap, voeding',
+    mental: 'Leren, lezen',
+    emotional: 'Relaties, empathie',
+    spiritual: 'Zingeving, stilte',
+  };
 
   return (
     <div className="space-y-4" aria-label="zaag scherpen">
       <h2 className="text-xl font-semibold">Zaag Scherpen</h2>
+      <p className="text-sm text-slate-400">
+        Vink de domeinen aan waar je deze week actief in investeerde. Dit helpt je
+        om in balans te blijven.
+      </p>
       <div className="space-y-2">
         {areas.map((area) => (
-
           <label key={area} className="flex items-center space-x-2">
             <input
               type="checkbox"
               checked={renewal[area]}
               onChange={() => update(area)}
-
               aria-label={labels[area]}
             />
-            <span>{labels[area]}</span>
+            <span title={tips[area]}>{labels[area]}</span>
           </label>
         ))}
       </div>
       <div className="w-full bg-gray-700 rounded h-2" aria-label="voortgang">
-
-        <div className="bg-green-600 h-2 rounded" style={{ width: `${progress}%` }} />
+        <div
+          className="bg-green-600 h-2 rounded"
+          style={{ width: `${progress}%` }}
+        />
       </div>
+      <p className="text-xs text-slate-400">{Math.round(progress)}% voltooid</p>
     </div>
   );
 }

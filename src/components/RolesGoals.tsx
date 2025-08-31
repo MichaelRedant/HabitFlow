@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import { usePlanner } from '../PlannerContext';
 import type { Goal, Role } from '../models';
-
-function isoWeekLabel(date = new Date()) {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
-  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
-}
+import { isoWeekLabel } from '../utils/date';
 
 export default function RolesGoals() {
   const { state, setState } = usePlanner();
@@ -41,33 +33,35 @@ export default function RolesGoals() {
   };
 
   return (
-
     <div className="space-y-4" aria-label="rollen en doelen">
       <h2 className="text-xl font-semibold">Weekkompas</h2>
+      <p className="text-sm text-slate-400">
+        Beschrijf je verschillende rollen (ouder, collega, vriend ...) en koppel er
+        een doel aan voor deze week.
+      </p>
 
-      <div className="space-y-2">
+      <div className="space-y-2 bg-white/5 border border-white/10 p-3 rounded">
         <input
           type="text"
           value={roleTitle}
           onChange={(e) => setRoleTitle(e.target.value)}
-
-          placeholder="Rol titel"
-          className="border p-1 w-full"
+          placeholder="Rol titel, bv. Ouder"
+          className="bg-transparent border p-1 w-full rounded"
           aria-label="titel nieuwe rol"
-
         />
         <input
           type="text"
           value={roleDesc}
           onChange={(e) => setRoleDesc(e.target.value)}
-
-          placeholder="Rol beschrijving"
-          className="border p-1 w-full"
+          placeholder="Korte beschrijving"
+          className="bg-transparent border p-1 w-full rounded"
           aria-label="beschrijving nieuwe rol"
         />
-        <button onClick={addRole} className="bg-blue-600 text-white px-2 py-1 rounded">
+        <button
+          onClick={addRole}
+          className="bg-blue-600 text-white px-2 py-1 rounded"
+        >
           Voeg rol toe
-
         </button>
       </div>
       <div className="space-y-4">
@@ -84,10 +78,12 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
   const goals = state.goals.filter((g) => g.roleId === role.id && g.week === week);
   const [text, setText] = useState('');
   return (
-
-    <div className="border p-2 rounded" aria-label={`rol ${role.title}`}>
+    <div
+      className="bg-white/5 border border-white/10 p-3 rounded"
+      aria-label={`rol ${role.title}`}
+    >
       <h3 className="font-medium">{role.title}</h3>
-      <p className="text-sm text-gray-400">{role.description}</p>
+      <p className="text-sm text-slate-400">{role.description}</p>
 
       <ul className="list-disc ml-5 mt-2">
         {goals.map((g) => (
@@ -96,13 +92,11 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
       </ul>
       <div className="flex mt-2 space-x-2">
         <input
-          className="border p-1 flex-1"
+          className="bg-transparent border p-1 flex-1 rounded"
           value={text}
           onChange={(e) => setText(e.target.value)}
-
-          placeholder="Weekdoel"
+          placeholder="Weekdoel, bv. 3x sporten"
           aria-label={`doel voor ${role.title}`}
-
         />
         <button
           className="bg-green-600 text-white px-2 py-1 rounded"
@@ -111,9 +105,7 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
             setText('');
           }}
         >
-
           Voeg toe
-
         </button>
       </div>
     </div>

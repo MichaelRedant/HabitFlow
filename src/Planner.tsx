@@ -91,7 +91,6 @@ function DayView({
 }
 
 
-
 function WeekView({
   current,
   events,
@@ -281,6 +280,7 @@ export default function Planner() {
     setSelectedDate(date);
     setNoteModal(true);
   }
+
 
   function handleMenu(date: Date, e: React.MouseEvent) {
     setMenu({ date, x: e.clientX, y: e.clientY });

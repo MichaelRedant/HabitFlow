@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import { usePlanner } from '../PlannerContext';
 import type { Reflection } from '../models';
-
-function isoWeekLabel(date = new Date()) {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
-  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
-}
+import { isoWeekLabel } from '../utils/date';
 
 export default function Reflection() {
   const { state, setState } = usePlanner();
@@ -27,35 +19,43 @@ export default function Reflection() {
   };
 
   return (
-
     <div className="space-y-4" aria-label="reflectie">
       <h2 className="text-xl font-semibold">Reflectie</h2>
+      <p className="text-sm text-slate-400">
+        Sta kort stil bij je week. Deze vragen helpen je vooruit, ook zonder de 7
+        Habits gelezen te hebben.
+      </p>
       <div>
-        <label className="block font-medium" htmlFor="weekly">Was ik proactief of reactief?</label>
-
+        <label className="block font-medium" htmlFor="weekly">
+          Was ik proactief of reactief?
+        </label>
         <textarea
           id="weekly"
-          className="border w-full p-2 h-24"
+          className="bg-transparent border w-full p-2 h-24 rounded"
+          placeholder="Voorbeelden, situaties, inzichten..."
           value={weekly}
           onChange={(e) => setWeekly(e.target.value)}
         />
       </div>
       <div>
-
-        <label className="block font-medium" htmlFor="monthly">Hoe goed sloten mijn taken aan bij mijn missie en waarden?</label>
-
+        <label className="block font-medium" htmlFor="monthly">
+          Hoe sloten mijn acties aan bij mijn missie en waarden?
+        </label>
         <textarea
           id="monthly"
-          className="border w-full p-2 h-24"
+          className="bg-transparent border w-full p-2 h-24 rounded"
+          placeholder="Wat gaf energie? Wat kan beter?"
           value={monthly}
           onChange={(e) => setMonthly(e.target.value)}
         />
       </div>
-      <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={save}>
-
-        Bewaar
-
+      <button
+        className="bg-blue-600 text-white px-2 py-1 rounded"
+        onClick={save}
+      >
+        Bewaar reflectie
       </button>
     </div>
   );
 }
+
