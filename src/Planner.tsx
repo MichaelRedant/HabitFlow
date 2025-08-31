@@ -40,7 +40,6 @@ function DayView({
           (ev) =>
 
             ev.date === currentIso &&
-
             ev.time &&
             Number(ev.time.slice(0, 2)) === h
         );
@@ -50,7 +49,6 @@ function DayView({
 
             <div
               className="border-b border-slate-700 h-12 cursor-pointer relative"
-
               onClick={() =>
                 onQuickAdd(
                   new Date(
@@ -73,7 +71,6 @@ function DayView({
                   e
                 );
               }}
-
             >
               {evs.map((ev) => (
                 <div
@@ -84,6 +81,7 @@ function DayView({
                 </div>
               ))}
             </div>
+
 
           </div>
         );
@@ -341,18 +339,29 @@ export default function Planner() {
             <button
               className="p-2 rounded-lg bg-white/10 hover:bg-white/20"
               onClick={prev}
+
+              title="Vorige periode"
+              aria-label="vorige periode"
+
             >
               <FiChevronLeft />
             </button>
             <button
               className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm"
               onClick={today}
+
+              title="Spring naar vandaag"
+              aria-label="ga naar vandaag"
+
             >
               Vandaag
             </button>
             <button
               className="p-2 rounded-lg bg-white/10 hover:bg-white/20"
               onClick={next}
+              title="Volgende periode"
+              aria-label="volgende periode"
+
             >
               <FiChevronRight />
             </button>
@@ -366,6 +375,7 @@ export default function Planner() {
                 view === 'day' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
               )}
               onClick={() => setView('day')}
+              title="Toon dagoverzicht"
             >
               Dag
             </button>
@@ -375,6 +385,7 @@ export default function Planner() {
                 view === 'week' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
               )}
               onClick={() => setView('week')}
+              title="Toon weekoverzicht"
             >
               Week
             </button>
@@ -384,6 +395,7 @@ export default function Planner() {
                 view === 'month' ? 'bg-white/20 text-teal-300' : 'bg-white/10 hover:bg-white/15'
               )}
               onClick={() => setView('month')}
+              title="Toon maandoverzicht"
             >
               Maand
             </button>
@@ -396,6 +408,9 @@ export default function Planner() {
                 setSelectedDate(new Date());
                 setTaskModal(true);
               }}
+
+              title="Voeg een nieuwe taak toe"
+
             >
               <FiPlus /> Nieuwe taak
             </button>
@@ -405,6 +420,9 @@ export default function Planner() {
                 setSelectedDate(new Date());
                 setNoteModal(true);
               }}
+
+              title="Maak een nieuwe notitie"
+
             >
               <FiPlus /> Nieuwe notitie
             </button>
