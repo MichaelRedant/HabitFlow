@@ -69,6 +69,10 @@ export default function Notes() {
     setImportant(false);
   };
 
+  const removeNote = (id: string) => {
+    setState((s) => ({ ...s, notes: s.notes.filter((n) => n.id !== id) }));
+  };
+
   const filteredNotes = useMemo(() => {
     if (!search.trim()) return state.notes;
     const q = search.toLowerCase();
@@ -149,14 +153,21 @@ export default function Notes() {
       <ul className="space-y-4">
         {filteredNotes.map((n) => (
           <li key={n.id} className="border p-2 rounded">
-
             <div className="flex justify-between text-xs text-gray-400 mb-1">
               <span>{n.date}</span>
-              <span>Labels: {n.tags.join(', ')}</span>
+              <button
+                onClick={() => removeNote(n.id)}
+                className="text-red-500 hover:underline"
+                aria-label="verwijder notitie"
+              >
+                Verwijder
+              </button>
+            </div>
+            <div className="text-xs text-gray-400 mb-1">
+              Labels: {n.tags.join(', ') || '-'}
             </div>
             <div className="prose prose-sm max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
-
             </div>
           </li>
         ))}
