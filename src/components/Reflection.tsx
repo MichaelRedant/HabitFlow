@@ -27,10 +27,12 @@ export default function Reflection() {
   };
 
   return (
+
     <div className="space-y-4" aria-label="reflectie">
       <h2 className="text-xl font-semibold">Reflectie</h2>
       <div>
         <label className="block font-medium" htmlFor="weekly">Was ik proactief of reactief?</label>
+
         <textarea
           id="weekly"
           className="border w-full p-2 h-24"
@@ -39,7 +41,9 @@ export default function Reflection() {
         />
       </div>
       <div>
+
         <label className="block font-medium" htmlFor="monthly">Hoe goed sloten mijn taken aan bij mijn missie en waarden?</label>
+
         <textarea
           id="monthly"
           className="border w-full p-2 h-24"
@@ -48,7 +52,9 @@ export default function Reflection() {
         />
       </div>
       <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={save}>
+
         Bewaar
+
       </button>
     </div>
   );
