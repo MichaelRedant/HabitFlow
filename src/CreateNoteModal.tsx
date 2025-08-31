@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { createNote, updateNote } from './services/api';
 import { aiSummarize } from './services/ai';
-import type { Note } from './types';
+import type { Note, HabitId } from './types';
 
 export default function CreateNoteModal(
 
@@ -36,7 +36,7 @@ export default function CreateNoteModal(
     try {
       const ai = await aiSummarize(created.id);
       const patched = await updateNote(created.id, {
-        habit: ai.habit ?? undefined,
+        habit: (ai.habit ?? undefined) as HabitId | undefined,
         quadrant: ai.quadrant ?? undefined,
         tags: ai.suggestedTags ?? [],
       });

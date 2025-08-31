@@ -52,7 +52,7 @@ export default function CreateTaskModal(
     if (!text) return;
     try {
       const c = await aiClassify(text);
-      if (c.habit) setHabit(c.habit);
+      if (c.habit) setHabit(c.habit as HabitId);
       if (c.quadrant) applyQuick(c.quadrant);
       if (c.suggestedTags.length)
         setTags(c.suggestedTags.join(', '));
@@ -71,7 +71,7 @@ export default function CreateTaskModal(
       if (m.description) setDescription(m.description);
       if (m.due) setDueAt(m.due.slice(0,16));
       if (m.quadrant) applyQuick(m.quadrant);
-      if (m.habit) setHabit(m.habit);
+      if (m.habit) setHabit(m.habit as HabitId);
       if (m.tags.length) setTags(m.tags.join(', '));
     } catch (err) {
       console.error('AI matrix mislukt', err);

@@ -3,10 +3,13 @@ import OpenAI from "openai";
 
 export const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Gebruik het 4o-model als standaard voor alle AI-acties
+const DEFAULT_MODEL = "gpt-4o-mini";
+
 // Compacte helper om structured JSON terug te krijgen
 async function respondJSON({ model, system, user, schema }) {
   const res = await openai.responses.create({
-    model, // bijv. "gpt-4.1-mini" (snel/goedkoop) of zwaarder indien nodig
+    model, // bijv. "gpt-4o-mini" (snel/goedkoop) of zwaarder indien nodig
     input: [
       { role: "system", content: system },
       { role: "user", content: user },
@@ -63,7 +66,7 @@ ${content}
   };
 
   return respondJSON({
-    model: "gpt-4.1-mini",
+    model: DEFAULT_MODEL,
     system,
     user,
     schema,
@@ -86,7 +89,7 @@ export async function classifyText(text) {
   };
 
   return respondJSON({
-    model: "gpt-4.1-mini",
+    model: DEFAULT_MODEL,
     system,
     user: text,
     schema,
@@ -112,7 +115,7 @@ export async function parseTask(text) {
   };
 
   return respondJSON({
-    model: "gpt-4.1-mini",
+    model: DEFAULT_MODEL,
     system,
     user: text,
     schema,
@@ -145,7 +148,7 @@ export async function weeklyCompass(text) {
   };
 
   return respondJSON({
-    model: "gpt-4.1-mini",
+    model: DEFAULT_MODEL,
     system,
     user: text,
     schema,
