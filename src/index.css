@@ -5,10 +5,23 @@
 html, body, #root { height: 100%; }
 
 body {
-  /* donkere basis + subtiel grid */
+  /* futuristische Tesla-achtige look */
+  font-family: 'Orbitron', sans-serif;
   background:
+    radial-gradient(ellipse at top left, rgba(56,189,248,0.12), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(56,189,248,0.05), transparent 60%),
     radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 1px) 0 0/24px 24px,
-    linear-gradient(to bottom right, #0f172a, #0b1220);
+    linear-gradient(to bottom right, #0a0a0f, #001f3f);
   color: #e5e7eb; /* text-slate-200 */
   margin: 0;
+}
+
+@layer utilities {
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out both;
+  }
 }
