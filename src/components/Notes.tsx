@@ -13,6 +13,7 @@ export default function Notes() {
   const [tags, setTags] = useState('');
   const [linkedGoalId, setLinkedGoalId] = useState('');
   const [week, setWeek] = useState('');
+  const [search, setSearch] = useState('');
 
   const [urgent, setUrgent] = useState(false);
   const [important, setImportant] = useState(false);
@@ -68,11 +69,25 @@ export default function Notes() {
     setImportant(false);
   };
 
-  const filteredNotes = useMemo(() => state.notes, [state.notes]);
+  const filteredNotes = useMemo(() => {
+    if (!search.trim()) return state.notes;
+    const q = search.toLowerCase();
+    return state.notes.filter((n) => {
+      const text = [n.content, n.summary, n.tags.join(' ')].join(' ').toLowerCase();
+      return text.includes(q);
+    });
+  }, [state.notes, search]);
 
   return (
     <div className="space-y-4" aria-label="notities sectie">
       <h2 className="text-xl font-semibold">Notities</h2>
+      <input
+        className="border p-1 w-full"
+        placeholder="Zoek notities"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        aria-label="zoek notities"
+      />
 
       <div className="space-y-2">
         <textarea
