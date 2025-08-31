@@ -5,7 +5,7 @@ import { searchNotes } from "../embeddings.js";
 
 const router = Router();
 
-// POST /api/ai/summarize  { noteId }
+// POST /api/ai/summarizes  { noteId }
 router.post("/summarize", async (req, res) => {
   const { noteId } = req.body;
   const note = await Note.findByPk(noteId);
