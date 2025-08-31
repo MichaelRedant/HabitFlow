@@ -17,6 +17,7 @@ HabitFlow is een **React + TypeScript** app (Vite) met een **Tesla-2025 look**: 
 - **Matrix**: visuele Eisenhower-matrix met hover-interacties.
 - **Missie & Waarden**: noteer je persoonlijke missie en kernwaarden met duidelijke hints.
 - **Weekkompas & Reflectie**: rollen, doelen en "Zaag Scherpen" met heldere uitleg voor nieuwkomers.
+
 - **Onboarding & Help**: interactieve gids voor nieuwe gebruikers, altijd opnieuw te starten.
 - **Vlaams taalgebruik**: “Takenlijst”, “Weekplanner”, “Herinnering”.
 - **Design**: Dark mode standaard, glass cards, subtiele vonken/aurora-achtergronden.

@@ -17,6 +17,7 @@ interface PlannerEvent {
   time?: string; // HH:MM
 }
 
+
 function DayView({
   current,
   events,
@@ -31,11 +32,13 @@ function DayView({
   const hours = Array.from({ length: 17 }, (_, i) => i + 6); // 06:00-22:00
   const currentIso = current.toISOString().slice(0, 10);
 
+
   return (
     <div className="grid grid-cols-[60px_1fr] gap-x-4 text-sm">
       {hours.map((h) => {
         const evs = events.filter(
           (ev) =>
+
             ev.date === currentIso &&
             ev.time &&
             Number(ev.time.slice(0, 2)) === h
@@ -79,6 +82,7 @@ function DayView({
               ))}
             </div>
 
+
           </div>
         );
       })}
@@ -98,6 +102,7 @@ function WeekView({
   onQuickAdd: (date: Date) => void;
   onMenu: (date: Date, e: React.MouseEvent) => void;
 }) {
+
   const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   const hours = Array.from({ length: 17 }, (_, i) => i + 6);
   const now = new Date();
@@ -147,11 +152,13 @@ function WeekView({
               <div
                 key={i}
                 className="border-l border-t border-slate-700 h-12 cursor-pointer relative"
+
                 onClick={() => onQuickAdd(new Date(d))}
                 onContextMenu={(e) => {
                   e.preventDefault();
                   onMenu(new Date(d), e);
                 }}
+
               >
                 {evs.map((ev) => (
                   <div
@@ -172,6 +179,7 @@ function WeekView({
 }
 
 
+
 function MonthView({
   current,
   events,
@@ -183,6 +191,7 @@ function MonthView({
   onQuickAdd: (date: Date) => void;
   onMenu: (date: Date, e: React.MouseEvent) => void;
 }) {
+
   const now = new Date();
   const year = current.getFullYear();
   const month = current.getMonth();
@@ -254,6 +263,7 @@ export default function Planner() {
     }
   });
 
+
   useEffect(() => {
     try {
       localStorage.setItem('hf.events', JSON.stringify(events));
@@ -270,6 +280,7 @@ export default function Planner() {
     setSelectedDate(date);
     setNoteModal(true);
   }
+
 
   function handleMenu(date: Date, e: React.MouseEvent) {
     setMenu({ date, x: e.clientX, y: e.clientY });
@@ -328,16 +339,20 @@ export default function Planner() {
             <button
               className="p-2 rounded-lg bg-white/10 hover:bg-white/20"
               onClick={prev}
+
               title="Vorige periode"
               aria-label="vorige periode"
+
             >
               <FiChevronLeft />
             </button>
             <button
               className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm"
               onClick={today}
+
               title="Spring naar vandaag"
               aria-label="ga naar vandaag"
+
             >
               Vandaag
             </button>
@@ -346,6 +361,7 @@ export default function Planner() {
               onClick={next}
               title="Volgende periode"
               aria-label="volgende periode"
+
             >
               <FiChevronRight />
             </button>
@@ -392,7 +408,9 @@ export default function Planner() {
                 setSelectedDate(new Date());
                 setTaskModal(true);
               }}
+
               title="Voeg een nieuwe taak toe"
+
             >
               <FiPlus /> Nieuwe taak
             </button>
@@ -402,13 +420,16 @@ export default function Planner() {
                 setSelectedDate(new Date());
                 setNoteModal(true);
               }}
+
               title="Maak een nieuwe notitie"
+
             >
               <FiPlus /> Nieuwe notitie
             </button>
           </div>
         </div>
         <div className="overflow-auto">
+
           {view === 'day' && (
             <DayView
               current={current}
@@ -433,6 +454,7 @@ export default function Planner() {
               onMenu={handleMenu}
             />
           )}
+
         </div>
       </section>
       {menu && (
