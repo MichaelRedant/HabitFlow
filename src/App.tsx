@@ -35,6 +35,7 @@ import {
   updateNote as apiUpdateNote,
   deleteNote as apiDeleteNote,
 } from "./services/api";
+import { aiSearch } from "./services/ai";
 import type { Note, HabitId, Quadrant } from "./types";
 
 const HABITS: { id: HabitId; name: string }[] = [
@@ -344,6 +345,26 @@ export default function App() {
       });
   }
 
+  async function runAiSearch() {
+    const text = q.trim();
+    if (!text) return;
+    try {
+      const results = await aiSearch(text);
+      if (results.length) {
+        setSelected(results[0].id);
+        alert(
+          results
+            .map((r) => `${r.title} (${Math.round(r.score * 100)}%)`)
+            .join("\n")
+        );
+      } else {
+        alert("Geen resultaten");
+      }
+    } catch (err) {
+      console.error("AI zoek mislukt", err);
+    }
+  }
+
   return (
     <div className="h-full w-full overflow-hidden relative">
       {/* Background */}
@@ -406,6 +427,13 @@ export default function App() {
                     className="pl-9 pr-3 py-2 w-full sm:w-64 rounded-xl bg-white/10 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
                   />
                 </div>
+
+                <button
+                  onClick={runAiSearch}
+                  className="px-3 py-2 rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm"
+                >
+                  AI zoek
+                </button>
 
                 <button
                   className="px-3 py-2 w-full sm:w-auto rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"

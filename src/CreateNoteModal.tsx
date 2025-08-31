@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from 'react';
 
-import { createNote } from './services/api';
+import { createNote, updateNote } from './services/api';
+import { aiSummarize } from './services/ai';
 import type { Note } from './types';
 
 export default function CreateNoteModal(
@@ -32,11 +33,23 @@ export default function CreateNoteModal(
 
     };
     const created = await createNote(input);
-    onCreated(created);
+    try {
+      const ai = await aiSummarize(created.id);
+      const patched = await updateNote(created.id, {
+        habit: ai.habit ?? undefined,
+        quadrant: ai.quadrant ?? undefined,
+        tags: ai.suggestedTags ?? [],
+      });
+      onCreated(patched);
+      const actions = ai.actionItems.map((a) => `- ${a.title} (${a.quadrant})`).join('\n');
+      alert(`Samenvatting: ${ai.summary}\n\nActies:\n${actions}`);
+    } catch (err) {
+      console.error('AI analyse mislukt', err);
+      onCreated(created);
+    }
     onClose();
     setTitle('');
     setContent('');
-
     setScheduled('');
 
   }
