@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* jouw globale styling */
+:root { color-scheme: dark; }
+html, body, #root { height: 100%; }
+
+body {
+  /* donkere basis + subtiel grid */
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 1px) 0 0/24px 24px,
+    linear-gradient(to bottom right, #0f172a, #0b1220);
+  color: #e5e7eb; /* text-slate-200 */
+  margin: 0;
+}
