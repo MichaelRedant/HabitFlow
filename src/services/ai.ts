@@ -32,3 +32,27 @@ export async function aiSearch(q: string) {
   const r = await fetch(`/api/ai/search?q=${encodeURIComponent(q)}`);
   return r.json() as Promise<Array<{ id: number; title: string; score: number }>>;
 }
+
+export async function aiMatrix(text: string) {
+  const r = await fetch("/api/ai/matrix", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text }),
+  });
+  return r.json() as Promise<{
+    title: string;
+    description: string | null;
+    due: string | null;
+    quadrant: "I" | "II" | "III" | "IV" | null;
+    habit: number | null;
+    tags: string[];
+  }>;
+}
+
+export async function aiWeeklyCompass() {
+  const r = await fetch("/api/ai/weekly", { method: "POST" });
+  return r.json() as Promise<{
+    roles: Array<{ role: string; goal: string }>;
+    bigRocks: string[];
+  }>;
+}

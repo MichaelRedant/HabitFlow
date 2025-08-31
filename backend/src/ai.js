@@ -92,3 +92,62 @@ export async function classifyText(text) {
     schema,
   });
 }
+
+// 3) Vrije tekst -> taakvelden voor Matrix-assistent
+export async function parseTask(text) {
+  const system =
+    "Zet vrije Nederlandstalige tekst om in taakvelden: titel, omschrijving, deadline, quadrant, habit en tags.";
+  const schema = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      title: { type: "string" },
+      description: { type: ["string", "null"] },
+      due: { type: ["string", "null"], description: "ISO-8601 datum of null" },
+      quadrant: { type: ["string", "null"], enum: ["I", "II", "III", "IV"] },
+      habit: { type: ["integer", "null"], minimum: 1, maximum: 7 },
+      tags: { type: "array", items: { type: "string" } },
+    },
+    required: ["title"],
+  };
+
+  return respondJSON({
+    model: "gpt-4.1-mini",
+    system,
+    user: text,
+    schema,
+  });
+}
+
+// 4) Weekly Compass generator op basis van recente notities
+export async function weeklyCompass(text) {
+  const system =
+    "Analyseer notities van de afgelopen week en stel doelen per rol en 3-5 grote keien voor.";
+  const schema = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      roles: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["role", "goal"],
+          properties: {
+            role: { type: "string" },
+            goal: { type: "string" },
+          },
+        },
+      },
+      bigRocks: { type: "array", items: { type: "string" } },
+    },
+    required: ["roles", "bigRocks"],
+  };
+
+  return respondJSON({
+    model: "gpt-4.1-mini",
+    system,
+    user: text,
+    schema,
+  });
+}

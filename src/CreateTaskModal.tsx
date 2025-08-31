@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { HabitId, Quadrant, Task } from './types';
 import { createTask } from './services/api';
+import { aiClassify, aiMatrix } from './services/ai';
 
 const HABITS: HabitId[] = [1,2,3,4,5,6,7];
 const QUICK: Record<Quadrant,{importance:number;urgency:number}> = {
@@ -42,6 +43,36 @@ export default function CreateTaskModal(
     onCreated(created);
     onClose();
     setTitle(''); setDescription(''); setHabit(''); setImportance(5); setUrgency(2); setDueAt(''); setTags('');
+  }
+
+  async function classify() {
+    const text = `${title}\n${description}`.trim();
+    if (!text) return;
+    try {
+      const c = await aiClassify(text);
+      if (c.habit) setHabit(c.habit);
+      if (c.quadrant) applyQuick(c.quadrant);
+      if (c.suggestedTags.length)
+        setTags(c.suggestedTags.join(', '));
+    } catch (err) {
+      console.error('AI classificatie mislukt', err);
+    }
+  }
+
+  async function matrixAssist() {
+    const text = `${title} ${description}`.trim();
+    if (!text) return;
+    try {
+      const m = await aiMatrix(text);
+      if (m.title) setTitle(m.title);
+      if (m.description) setDescription(m.description);
+      if (m.due) setDueAt(m.due.slice(0,16));
+      if (m.quadrant) applyQuick(m.quadrant);
+      if (m.habit) setHabit(m.habit);
+      if (m.tags.length) setTags(m.tags.join(', '));
+    } catch (err) {
+      console.error('AI matrix mislukt', err);
+    }
   }
 
   function applyQuick(q: Quadrant) {
@@ -93,6 +124,14 @@ export default function CreateTaskModal(
                 Quick {q}
               </button>
             )}
+            <button onClick={matrixAssist}
+              className="px-2 py-1 rounded-lg bg-teal-400/20 border border-teal-300/30 text-teal-200">
+              Matrix assistent
+            </button>
+            <button onClick={classify}
+              className="px-2 py-1 rounded-lg bg-teal-400/20 border border-teal-300/30 text-teal-200">
+              AI suggesties
+            </button>
           </div>
 
           <input className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
