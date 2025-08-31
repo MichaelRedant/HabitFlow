@@ -10,7 +10,9 @@ function isoWeekLabel(date = new Date()) {
   return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
 }
 
+
 type Area = 'physical' | 'mental' | 'emotional' | 'spiritual';
+
 
 export default function SharpenSaw() {
   const { state, setState } = usePlanner();
@@ -32,6 +34,7 @@ export default function SharpenSaw() {
     });
   };
 
+
   const areas: Area[] = ['physical', 'mental', 'emotional', 'spiritual'];
   const count = areas.filter((k) => renewal[k]).length;
   const progress = (count / 4) * 100;
@@ -47,11 +50,13 @@ export default function SharpenSaw() {
       <h2 className="text-xl font-semibold">Zaag Scherpen</h2>
       <div className="space-y-2">
         {areas.map((area) => (
+
           <label key={area} className="flex items-center space-x-2">
             <input
               type="checkbox"
               checked={renewal[area]}
               onChange={() => update(area)}
+
               aria-label={labels[area]}
             />
             <span>{labels[area]}</span>
@@ -59,6 +64,7 @@ export default function SharpenSaw() {
         ))}
       </div>
       <div className="w-full bg-gray-700 rounded h-2" aria-label="voortgang">
+
         <div className="bg-green-600 h-2 rounded" style={{ width: `${progress}%` }} />
       </div>
     </div>

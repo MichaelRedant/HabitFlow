@@ -11,6 +11,7 @@ export default function App() {
   const [page, setPage] = useState<'planner' | 'daily' | 'compass' | 'notes' | 'renewal' | 'reflection'>('planner');
 
   return (
+
     <div className="flex h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-gray-100">
       <aside className="w-64 border-r border-gray-700 p-4 overflow-y-auto backdrop-blur" aria-label="zijbalk">
         <MissionValues />
@@ -24,6 +25,7 @@ export default function App() {
         </nav>
       </aside>
       <main className="flex-1 overflow-y-auto p-4 animate-fade-in" aria-label="hoofdinhoud">
+
         {page === 'planner' && <WeeklyPlanner />}
         {page === 'daily' && <DailyPage />}
         {page === 'compass' && <RolesGoals />}
@@ -39,7 +41,9 @@ function NavButton({ label, active, onClick }: { label: string; active: boolean;
   return (
     <button
       onClick={onClick}
+
       className={`block w-full text-left px-2 py-1 rounded transition-transform duration-200 ${active ? 'bg-blue-600 text-white scale-105' : 'hover:bg-gray-700 hover:scale-105'}`}
+
     >
       {label}
     </button>
