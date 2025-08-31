@@ -35,7 +35,7 @@ import {
   updateNote as apiUpdateNote,
   deleteNote as apiDeleteNote,
 } from "./services/api";
-import { aiSearch, aiWeeklyCompass } from "./services/ai";
+import { aiSearch, aiWeeklyCompass, aiSummarize } from "./services/ai";
 
 import type { Note, HabitId, Quadrant } from "./types";
 
@@ -226,9 +226,11 @@ export default function App() {
   const [q, setQ] = useState("");
   const [habit, setHabit] = useState<"all" | HabitId>("all");
   const [quad, setQuad] = useState<"all" | Quadrant>("all");
-  const [selected, setSelected] = useState<number | null>(null);
-  const [view, setView] = useState<"notes" | "matrix">("notes");
-  const [taskModal, setTaskModal] = useState(false);
+const [selected, setSelected] = useState<number | null>(null);
+const [view, setView] = useState<"notes" | "matrix">("notes");
+const [taskModal, setTaskModal] = useState(false);
+const [aiResult, setAiResult] = useState<Awaited<ReturnType<typeof aiSummarize>> | null>(null);
+const [aiBusy, setAiBusy] = useState(false);
 
   // meet header hoogte om content perfect te laten passen
   const headerRef = useRef<HTMLDivElement>(null);
@@ -252,6 +254,8 @@ export default function App() {
   }, []);
 
   useEffect(() => saveNotes(notes), [notes]);
+
+  useEffect(() => setAiResult(null), [selected]);
 
   const current = notes.find((n) => n.id === selected) ?? null;
 
@@ -344,6 +348,24 @@ export default function App() {
       .catch((err) => {
         console.debug("createNote failed:", err);
       });
+  }
+
+  async function runAiSummary() {
+    if (!current) return;
+    setAiBusy(true);
+    try {
+      const ai = await aiSummarize(current.id);
+      setAiResult(ai);
+      update({
+        habit: (ai.habit ?? undefined) as HabitId | undefined,
+        quadrant: ai.quadrant ?? undefined,
+        tags: ai.suggestedTags ?? [],
+      });
+    } catch (err) {
+      console.error("AI samenvatten mislukt", err);
+    } finally {
+      setAiBusy(false);
+    }
   }
 
   async function runAiSearch() {
@@ -627,6 +649,9 @@ export default function App() {
                       <option key={q.id} value={q.id}>{`Q${q.id} — ${q.label}`}</option>
                     ))}
                   </select>
+                  <GlassButton onClick={runAiSummary} icon={<Sparkles />} disabled={aiBusy}>
+                    Samenvatten
+                  </GlassButton>
                   <GlassButton onClick={() => duplicate(current.id)} icon={<FiCopy />}>
                     Dupliceren
                   </GlassButton>
@@ -644,6 +669,20 @@ export default function App() {
                     placeholder="Schrijf hier…"
                   />
                 </div>
+
+                {aiResult && (
+                  <div className="p-3 border-t border-white/10 text-sm text-slate-200 space-y-2">
+                    <div className="font-semibold">Samenvatting</div>
+                    <p className="whitespace-pre-line text-slate-300">{aiResult.summary}</p>
+                    {aiResult.actionItems.length > 0 && (
+                      <ul className="list-disc list-inside text-slate-400">
+                        {aiResult.actionItems.map((a, i) => (
+                          <li key={i}>{`${a.title} (${a.quadrant})`}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
 
                 {/* Footer blijft zichtbaar */}
                 <div className="p-3 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-slate-300">
@@ -684,21 +723,25 @@ function GlassButton({
   onClick,
   icon,
   tone,
+  disabled,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   icon?: React.ReactNode;
   tone?: "danger" | "default";
+  disabled?: boolean;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={cls(
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={cls(
         "px-3 py-2 rounded-xl text-sm inline-flex items-center gap-2 border transition",
         tone === "danger"
           ? "bg-red-500/10 hover:bg-red-500/20 border-red-400/30 text-red-200"
-          : "bg-white/10 hover:bg-white/20 border-white/15 text-slate-100"
-      )}
+            : "bg-white/10 hover:bg-white/20 border-white/15 text-slate-100",
+          disabled && "opacity-50 cursor-not-allowed"
+        )}
     >
       {icon}
       {children}
