@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from 'react';
 
-import { createNote, updateNote } from './services/api';
+import { createNote, updateNote, createTask } from './services/api';
 import { aiSummarize } from './services/ai';
-import type { Note, HabitId } from './types';
+import { QUADRANT_PRESET } from './constants';
+import type { Note, HabitId, Quadrant } from './types';
 
 export default function CreateNoteModal(
 
@@ -41,7 +42,28 @@ export default function CreateNoteModal(
         tags: ai.suggestedTags ?? [],
       });
       onCreated(patched);
-      const actions = ai.actionItems.map((a) => `- ${a.title} (${a.quadrant})`).join('\n');
+
+      await Promise.all(
+        ai.actionItems.map(async (a) => {
+          const preset = QUADRANT_PRESET[a.quadrant as Quadrant];
+          await createTask({
+            title: a.title,
+            habit: (a.habit ?? undefined) as HabitId | undefined,
+            tags: a.tags ?? [],
+            dueAt: a.due ? new Date(a.due).toISOString() : null,
+            importance: preset.importance,
+            urgency: preset.urgency,
+            noteId: created.id,
+          });
+        })
+      );
+
+      const actions = ai.actionItems
+        .map(
+          (a) =>
+            `- ${a.title} (${a.quadrant}${a.due ? ' ' + new Date(a.due).toLocaleDateString() : ''})`
+        )
+        .join('\n');
       alert(`Samenvatting: ${ai.summary}\n\nActies:\n${actions}`);
     } catch (err) {
       console.error('AI analyse mislukt', err);
