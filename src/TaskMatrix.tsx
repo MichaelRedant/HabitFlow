@@ -2,13 +2,11 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import type { HabitId, Quadrant, Task, TaskStatus } from './types';
 import { fetchTasks, updateTask, completeTask } from './services/api';
 import { FiCheckSquare, FiSquare, FiClock } from 'react-icons/fi';
+import { QUADRANT_PRESET } from './constants';
 
 const HABITS: HabitId[] = [1,2,3,4,5,6,7];
 const STATUSES: TaskStatus[] = ['todo','doing','done','blocked','archived'];
 
-const PRESET: Record<Quadrant,{importance:number;urgency:number}> = {
-  I:{importance:5,urgency:5}, II:{importance:5,urgency:2}, III:{importance:2,urgency:5}, IV:{importance:2,urgency:2}
-};
 
 export default function TaskMatrix() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -43,7 +41,7 @@ export default function TaskMatrix() {
   }
 
   async function quickMove(t: Task, q: Quadrant) {
-    const next = await updateTask(t.id, PRESET[q]);
+    const next = await updateTask(t.id, QUADRANT_PRESET[q]);
     setTasks(xs => xs.map(x => x.id === t.id ? next : x));
   }
 
