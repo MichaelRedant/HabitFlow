@@ -29,7 +29,6 @@ export default function MissionValues() {
       {editing ? (
         <div className="space-y-2">
           <textarea
-
             className="w-full h-40 p-2 border rounded bg-gray-800"
 
             value={user.mission}

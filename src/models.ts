@@ -21,10 +21,12 @@ export interface Goal {
 export interface Note {
   id: string;
   content: string;
+
+  summary: string;
+  date: string; // ISO datum yyyy-mm-dd
   tags: string[];
   linkedGoalId?: string;
   linkedWeek?: string; // week label
-
   urgent: boolean;
   important: boolean;
 

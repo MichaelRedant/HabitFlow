@@ -17,7 +17,9 @@ export default function NoteMatrix({ notes }: { notes?: Note[] }) {
       <ul className="list-disc ml-4 space-y-1">
         {items.map((n) => (
           <li key={n.id} className="prose prose-sm max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.content}</ReactMarkdown>
+
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
+
           </li>
         ))}
       </ul>

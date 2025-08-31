@@ -4,7 +4,6 @@ import type { DropResult } from '@hello-pangea/dnd';
 import { usePlanner } from '../PlannerContext';
 import type { Task } from '../models';
 
-
 const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
 
 
