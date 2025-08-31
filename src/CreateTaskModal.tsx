@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { HabitId, Quadrant, Task } from './types';
 import { createTask } from './services/api';
-import { aiClassify } from './services/ai';
+
+import { aiClassify, aiMatrix } from './services/ai';
+
 
 const HABITS: HabitId[] = [1,2,3,4,5,6,7];
 const QUICK: Record<Quadrant,{importance:number;urgency:number}> = {
@@ -59,6 +61,24 @@ export default function CreateTaskModal(
     }
   }
 
+
+  async function matrixAssist() {
+    const text = `${title} ${description}`.trim();
+    if (!text) return;
+    try {
+      const m = await aiMatrix(text);
+      if (m.title) setTitle(m.title);
+      if (m.description) setDescription(m.description);
+      if (m.due) setDueAt(m.due.slice(0,16));
+      if (m.quadrant) applyQuick(m.quadrant);
+      if (m.habit) setHabit(m.habit);
+      if (m.tags.length) setTags(m.tags.join(', '));
+    } catch (err) {
+      console.error('AI matrix mislukt', err);
+    }
+  }
+
+
   function applyQuick(q: Quadrant) {
     setImportance(QUICK[q].importance);
     setUrgency(QUICK[q].urgency);
@@ -108,6 +128,12 @@ export default function CreateTaskModal(
                 Quick {q}
               </button>
             )}
+
+            <button onClick={matrixAssist}
+              className="px-2 py-1 rounded-lg bg-teal-400/20 border border-teal-300/30 text-teal-200">
+              Matrix assistent
+            </button>
+
             <button onClick={classify}
               className="px-2 py-1 rounded-lg bg-teal-400/20 border border-teal-300/30 text-teal-200">
               AI suggesties

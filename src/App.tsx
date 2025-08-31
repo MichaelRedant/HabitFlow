@@ -35,7 +35,8 @@ import {
   updateNote as apiUpdateNote,
   deleteNote as apiDeleteNote,
 } from "./services/api";
-import { aiSearch } from "./services/ai";
+import { aiSearch, aiWeeklyCompass } from "./services/ai";
+
 import type { Note, HabitId, Quadrant } from "./types";
 
 const HABITS: { id: HabitId; name: string }[] = [
@@ -365,6 +366,40 @@ export default function App() {
     }
   }
 
+
+  async function runWeeklyCompass() {
+    try {
+      const data = await aiWeeklyCompass();
+      const roles = data.roles
+        .map((r) => `- ${r.role}: ${r.goal}`)
+        .join("\n");
+      const rocks = data.bigRocks
+        .map((r) => `- [ ] ${r}`)
+        .join("\n");
+      const content = `# Weekly Compass\n## Rollen & Doelen (Habit 2)\n${roles}\n\n## Grote Keien (Habit 3 / QII)\n${rocks}\n\n## Sharpen the Saw (Habit 7)\n- Body:\n- Mind:\n- Social/Emo:\n- Spirit:`;
+      const base = {
+        title: `Weekly Compass — ${getIsoWeekLabel()}`,
+        content,
+        habit: 3 as HabitId,
+        quadrant: "II" as Quadrant,
+        tags: ["weekly"],
+      };
+      const now = Date.now();
+      const tempId = -now;
+      const newNote: Note = { id: tempId, ...base, createdAt: now, updatedAt: now };
+      setNotes((xs) => [newNote, ...xs]);
+      setSelected(tempId);
+      const saved = await apiCreateNote(base);
+      setNotes((xs) =>
+        xs.map((n) => (n.id === tempId ? { ...saved, tags: saved.tags ?? [] } : n))
+      );
+      setSelected(saved.id);
+    } catch (err) {
+      console.error("AI compass mislukt", err);
+    }
+  }
+
+
   return (
     <div className="h-full w-full overflow-hidden relative">
       {/* Background */}
@@ -436,6 +471,15 @@ export default function App() {
                 </button>
 
                 <button
+
+                  onClick={runWeeklyCompass}
+                  className="px-3 py-2 rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm"
+                >
+                  AI Compass
+                </button>
+
+                <button
+
                   className="px-3 py-2 w-full sm:w-auto rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
                   onClick={() => createNote("meeting")}
                 >
