@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { usePlanner } from '../PlannerContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import type { Note } from '../models';
 
-import type { Note, Task } from '../models';
-import { analyzeNote } from '../ai';
 
 const dayLabel = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
 
@@ -20,15 +19,11 @@ export default function DailyPage() {
   const priorities = tasks.filter((t) => t.type === 'rock').slice(0, 3);
   const [note, setNote] = useState('');
 
-
-  const addNote = async () => {
+  const addNote = () => {
     if (!note.trim()) return;
-    const today = new Date().toISOString().split('T')[0];
     const newNote: Note = {
       id: Date.now().toString(),
       content: note,
-      summary: '',
-      date: today,
 
       tags: ['dagelijks', day],
       linkedWeek: undefined,
@@ -37,22 +32,6 @@ export default function DailyPage() {
 
     };
     setState((s) => ({ ...s, notes: [newNote, ...s.notes] }));
-    analyzeNote(note).then(({ summary, tasks }) => {
-      setState((s) => {
-        const notes = s.notes.map((n) => (n.id === newNote.id ? { ...n, summary } : n));
-        const dayNames = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
-        const newTasks: Task[] = tasks.map((t) => ({
-          id: `${Date.now()}-${Math.random()}`,
-          title: t.title,
-          type: 'sand',
-          day: dayNames[new Date(t.date || today).getDay()],
-          time: '09:00',
-          linkedGoalId: undefined,
-        }));
-        return { ...s, notes, tasks: [...s.tasks, ...newTasks] };
-      });
-    });
-
     setNote('');
   };
 
@@ -110,10 +89,10 @@ export default function DailyPage() {
         <h3 className="font-medium">Recente notities</h3>
         <ul className="space-y-2">
           {state.notes.filter((n) => n.tags.includes('dagelijks')).slice(0,5).map((n) => (
+
             <li key={n.id} className="border p-2 rounded">
               <div className="prose prose-sm max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
-
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.content}</ReactMarkdown>
               </div>
             </li>
           ))}
