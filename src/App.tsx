@@ -36,6 +36,7 @@ import {
   deleteNote as apiDeleteNote,
 } from "./services/api";
 import { aiSearch, aiWeeklyCompass } from "./services/ai";
+
 import type { Note, HabitId, Quadrant } from "./types";
 
 const HABITS: { id: HabitId; name: string }[] = [
@@ -365,6 +366,7 @@ export default function App() {
     }
   }
 
+
   async function runWeeklyCompass() {
     try {
       const data = await aiWeeklyCompass();
@@ -396,6 +398,7 @@ export default function App() {
       console.error("AI compass mislukt", err);
     }
   }
+
 
   return (
     <div className="h-full w-full overflow-hidden relative">
@@ -468,6 +471,7 @@ export default function App() {
                 </button>
 
                 <button
+
                   onClick={runWeeklyCompass}
                   className="px-3 py-2 rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm"
                 >
@@ -475,6 +479,7 @@ export default function App() {
                 </button>
 
                 <button
+
                   className="px-3 py-2 w-full sm:w-auto rounded-xl bg-teal-400/20 hover:bg-teal-400/30 border border-teal-300/30 text-teal-200 text-sm flex items-center gap-2"
                   onClick={() => createNote("meeting")}
                 >
