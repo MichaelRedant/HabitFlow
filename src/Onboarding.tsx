@@ -14,6 +14,10 @@ export default function Onboarding({ onFinish }: { onFinish: () => void }) {
     {
       title: 'Task matrix',
       body: 'Plan je dag met de Eisenhower-matrix en houd focus op wat er echt toe doet.'
+    },
+    {
+      title: 'Hulp nodig?',
+      body: 'Je kan deze rondleiding later opnieuw starten via de Help-pagina.'
     }
   ];
   const [index, setIndex] = useState(0);

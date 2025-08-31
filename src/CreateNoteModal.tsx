@@ -87,23 +87,36 @@ export default function CreateNoteModal(
           <input
             className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
             placeholder="Titel"
+            aria-label="titel"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            autoFocus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (title.trim()) submit();
+              }
+            }}
           />
           <textarea
             className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
             placeholder="Inhoud"
+            aria-label="inhoud"
             rows={4}
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
 
-          <input
-            type="datetime-local"
-            className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
-            value={scheduled}
-            onChange={(e) => setScheduled(e.target.value)}
-          />
+          <div>
+            <input
+              type="datetime-local"
+              className="px-3 py-2 rounded-lg bg-white/10 border border-white/15 w-full"
+              value={scheduled}
+              onChange={(e) => setScheduled(e.target.value)}
+              aria-label="geplande datum"
+            />
+            <p className="text-xs text-slate-400 mt-1">Laat leeg om geen herinnering te zetten.</p>
+          </div>
 
           <div className="flex justify-end gap-2 mt-2">
             <button onClick={onClose} className="px-3 py-2 rounded-lg bg-white/10 border border-white/15">
