@@ -89,6 +89,13 @@ export default function CreateNoteModal(
             placeholder="Titel"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            autoFocus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (title.trim()) submit();
+              }
+            }}
           />
           <textarea
             className="px-3 py-2 rounded-lg bg-white/10 border border-white/15"
