@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { usePlanner } from '../PlannerContext';
 import type { Reflection } from '../models';
 import { isoWeekLabel } from '../utils/date';
+import GlassCard from './GlassCard';
 
 export default function Reflection() {
   const { state, setState } = usePlanner();
@@ -19,11 +20,11 @@ export default function Reflection() {
   };
 
   return (
-    <div className="space-y-4" aria-label="reflectie">
+    <GlassCard className="space-y-4 p-4" aria-label="reflectie">
       <h2 className="text-xl font-semibold">Reflectie</h2>
       <p className="text-sm text-slate-400">
-        Sta kort stil bij je week. Deze vragen helpen je vooruit, ook zonder de 7
-        Habits gelezen te hebben.
+        Sta stil bij je week: wat ging goed, wat kan beter? Deze oefening
+        ondersteunt Habit 7 en helpt je gericht te groeien.
       </p>
       <div>
         <label className="block font-medium" htmlFor="weekly">
@@ -55,7 +56,7 @@ export default function Reflection() {
       >
         Bewaar reflectie
       </button>
-    </div>
+    </GlassCard>
   );
 }
 

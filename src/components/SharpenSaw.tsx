@@ -1,6 +1,7 @@
 import { usePlanner } from '../PlannerContext';
 import type { Renewal } from '../models';
 import { isoWeekLabel } from '../utils/date';
+import GlassCard from './GlassCard';
 
 
 type Area = 'physical' | 'mental' | 'emotional' | 'spiritual';
@@ -44,11 +45,11 @@ export default function SharpenSaw() {
   };
 
   return (
-    <div className="space-y-4" aria-label="zaag scherpen">
+    <GlassCard className="space-y-4 p-4" aria-label="zaag scherpen">
       <h2 className="text-xl font-semibold">Zaag Scherpen</h2>
       <p className="text-sm text-slate-400">
-        Vink de domeinen aan waar je deze week actief in investeerde. Dit helpt je
-        om in balans te blijven.
+        Habit 7 draait om zelfvernieuwing. Vink aan waar je deze week in
+        investeerde om in balans te blijven.
       </p>
       <div className="space-y-2">
         {areas.map((area) => (
@@ -70,6 +71,6 @@ export default function SharpenSaw() {
         />
       </div>
       <p className="text-xs text-slate-400">{Math.round(progress)}% voltooid</p>
-    </div>
+    </GlassCard>
   );
 }

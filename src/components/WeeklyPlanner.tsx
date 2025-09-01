@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
 import { usePlanner } from '../PlannerContext';
 import type { Task } from '../models';
+import GlassCard from './GlassCard';
 
 const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
 
@@ -51,34 +52,28 @@ export default function WeeklyPlanner() {
     <div aria-label="weekplanner" className="space-y-4">
       <h2 className="text-xl font-semibold">Weekplanner</h2>
 
-      <div className="flex space-x-2">
+      <GlassCard className="flex space-x-2 p-2 items-center">
         <input
-          className="border p-1 flex-1"
+          className="bg-transparent border border-white/10 p-1 flex-1 rounded"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-
           placeholder="Taak"
           aria-label="taak titel"
-
         />
         <select
-          className="border p-1"
+          className="bg-transparent border border-white/10 p-1 rounded"
           value={type}
           onChange={(e) => setType(e.target.value as 'rock' | 'sand')}
-
           aria-label="taak type"
         >
           <option value="rock">Grote Steen</option>
           <option value="sand">Zand</option>
-
         </select>
         <select
-          className="border p-1"
+          className="bg-transparent border border-white/10 p-1 rounded"
           value={day}
           onChange={(e) => setDay(e.target.value)}
-
           aria-label="taak dag"
-
         >
           {days.map((d) => (
             <option key={d} value={d}>
@@ -88,28 +83,24 @@ export default function WeeklyPlanner() {
         </select>
         <input
           type="time"
-          className="border p-1"
+          className="bg-transparent border border-white/10 p-1 rounded"
           value={time}
           onChange={(e) => setTime(e.target.value)}
-
           aria-label="taak tijd"
         />
         <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={addTask}>
           Voeg toe
-
         </button>
-      </div>
+      </GlassCard>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-7 gap-2">
           {days.map((d) => (
             <Droppable droppableId={d} key={d}>
               {(provided) => (
-                <div
+                <GlassCard
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-
-                  className="min-h-[200px] border rounded p-1 bg-white/5"
-
+                  className="min-h-[200px] p-1"
                 >
                   <h3 className="text-center font-medium mb-1">{d}</h3>
                   {tasksByDay(d).map((t, idx) => (
@@ -129,7 +120,7 @@ export default function WeeklyPlanner() {
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                </div>
+                </GlassCard>
               )}
             </Droppable>
           ))}
