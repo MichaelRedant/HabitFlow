@@ -1,7 +1,10 @@
+
 import { useEffect, useMemo, useState } from 'react';
+
 import { usePlanner } from '../PlannerContext';
 import GlassCard from './GlassCard';
 import type { Task } from '../models';
+
 
 interface ExtEvent {
   id: string;
@@ -64,17 +67,21 @@ export default function Agenda() {
       ...extEvents.map((e) => ({ ...e, type: 'sand' as const })),
     ];
     const sorted = merged.sort((a, b) =>
+
       a.day.localeCompare(b.day) || a.time.localeCompare(b.time)
     );
     return sorted.reduce<Record<string, Task[]>>((acc, t) => {
       acc[t.day] = acc[t.day] ? [...acc[t.day], t] : [t];
       return acc;
     }, {});
+
   }, [state.tasks, extEvents]);
+
 
   return (
     <div className="space-y-4" aria-label="agenda">
       <h2 className="text-xl font-semibold">Agenda</h2>
+
       <div className="flex items-center space-x-2">
         <input
           className="bg-transparent border border-white/10 p-1 flex-1 rounded"
@@ -85,6 +92,7 @@ export default function Agenda() {
         />
       </div>
       <ul className="space-y-4 mt-4">
+
         {Object.entries(groups).map(([date, tasks]) => (
           <li key={date}>
             <GlassCard className="p-2">
@@ -105,11 +113,13 @@ export default function Agenda() {
             </GlassCard>
           </li>
         ))}
+
         {Object.keys(groups).length === 0 && (
           <li>
             <GlassCard className="p-2">Geen geplande taken</GlassCard>
           </li>
         )}
+
       </ul>
     </div>
   );
