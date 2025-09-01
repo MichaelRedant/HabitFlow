@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 
 import type { Note, Task } from '../models';
 import { analyzeNote } from '../ai';
+import GlassCard from './GlassCard';
 
 const dayLabel = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
 
@@ -60,65 +61,58 @@ export default function DailyPage() {
 
     <div className="space-y-4" aria-label="dagpagina">
       <h2 className="text-xl font-semibold">Vandaag</h2>
-      <div>
+      <GlassCard className="p-4 space-y-2">
         <h3 className="font-medium">Top 3 Prioriteiten</h3>
-
         <ul className="list-disc ml-5">
           {priorities.map((t) => (
             <li key={t.id}>{t.time} {t.title}</li>
           ))}
         </ul>
-      </div>
-      <div>
-
+      </GlassCard>
+      <GlassCard className="p-4 space-y-2">
         <h3 className="font-medium">Planning</h3>
         <ul className="list-disc ml-5">
           {tasks.map((t) => (
             <li key={t.id} className={t.type === 'rock' ? 'text-blue-400' : ''}>
-
               {t.time} {t.title}
             </li>
           ))}
         </ul>
-      </div>
-      <div>
-
+      </GlassCard>
+      <GlassCard className="p-4 space-y-2">
         <h3 className="font-medium">Snelle notities & dankbaarheid</h3>
-
         <textarea
-          className="border w-full h-24 p-2"
+          className="bg-transparent border border-white/10 w-full h-24 p-2 rounded"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-
           aria-label="snelle notitie"
         />
-        <button className="bg-blue-600 text-white px-2 py-1 rounded mt-1" onClick={addNote}>
+        <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={addNote}>
           Bewaar
         </button>
-      </div>
-      <div>
+      </GlassCard>
+      <GlassCard className="p-4 space-y-2">
         <h3 className="font-medium">Gekoppelde taken</h3>
-
         <ul className="list-disc ml-5">
           {tasks.filter((t) => t.linkedGoalId).map((t) => (
             <li key={t.id}>{t.time} {t.title}</li>
           ))}
         </ul>
-      </div>
-      <div>
-
+      </GlassCard>
+      <GlassCard className="p-4 space-y-2">
         <h3 className="font-medium">Recente notities</h3>
         <ul className="space-y-2">
           {state.notes.filter((n) => n.tags.includes('dagelijks')).slice(0,5).map((n) => (
-            <li key={n.id} className="border p-2 rounded">
-              <div className="prose prose-sm max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
-
-              </div>
+            <li key={n.id}>
+              <GlassCard className="p-2">
+                <div className="prose prose-sm max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
+                </div>
+              </GlassCard>
             </li>
           ))}
         </ul>
-      </div>
+      </GlassCard>
     </div>
   );
 }
