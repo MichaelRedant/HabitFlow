@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { usePlanner } from '../PlannerContext';
 import type { Goal, Role } from '../models';
 import { isoWeekLabel } from '../utils/date';
+import GlassCard from './GlassCard';
 
 export default function RolesGoals() {
   const { state, setState } = usePlanner();
@@ -40,7 +41,7 @@ export default function RolesGoals() {
         een doel aan voor deze week.
       </p>
 
-      <div className="space-y-2 bg-white/5 border border-white/10 p-3 rounded">
+      <GlassCard className="space-y-2 p-3">
         <input
           type="text"
           value={roleTitle}
@@ -63,7 +64,7 @@ export default function RolesGoals() {
         >
           Voeg rol toe
         </button>
-      </div>
+      </GlassCard>
       <div className="space-y-4">
         {state.roles.map((role) => (
           <RoleCard key={role.id} role={role} week={week} onAddGoal={addGoal} />
@@ -78,10 +79,7 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
   const goals = state.goals.filter((g) => g.roleId === role.id && g.week === week);
   const [text, setText] = useState('');
   return (
-    <div
-      className="bg-white/5 border border-white/10 p-3 rounded"
-      aria-label={`rol ${role.title}`}
-    >
+    <GlassCard className="p-3" aria-label={`rol ${role.title}`}>
       <h3 className="font-medium">{role.title}</h3>
       <p className="text-sm text-slate-400">{role.description}</p>
 
@@ -108,6 +106,6 @@ function RoleCard({ role, week, onAddGoal }: { role: Role; week: string; onAddGo
           Voeg toe
         </button>
       </div>
-    </div>
+    </GlassCard>
   );
 }
