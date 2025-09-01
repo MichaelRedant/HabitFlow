@@ -8,6 +8,9 @@ export default function NoteEditor({ onCreated }: { onCreated: (n: Note) => void
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
+  const [summary, setSummary] = useState<string | null>(null);
+
+
   // Load draft from localStorage
   useEffect(() => {
     try {
@@ -44,11 +47,13 @@ export default function NoteEditor({ onCreated }: { onCreated: (n: Note) => void
       const ai = await aiSummarize(created.id);
       const patched = await updateNote(created.id, {
         habit: (ai.habit ?? undefined) as HabitId | undefined,
-        quadrant: ai.quadrant ?? undefined as Quadrant | undefined,
+
+        quadrant: (ai.quadrant ?? undefined) as Quadrant | undefined,
         tags: ai.suggestedTags ?? [],
       });
       onCreated(patched);
-      alert(`Samenvatting: ${ai.summary}`);
+      setSummary(ai.summary);
+
     } catch {
       onCreated(created);
     }
@@ -81,6 +86,13 @@ export default function NoteEditor({ onCreated }: { onCreated: (n: Note) => void
         <Save className="w-4 h-4" />
         Bewaar
       </button>
+
+      {summary && (
+        <p className="text-sm text-teal-200" aria-live="polite">
+          Samenvatting: {summary}
+        </p>
+      )}
+
     </div>
   );
 }

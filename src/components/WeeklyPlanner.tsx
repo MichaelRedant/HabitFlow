@@ -5,16 +5,24 @@ import { usePlanner } from '../PlannerContext';
 import type { Task } from '../models';
 import GlassCard from './GlassCard';
 
-const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+const labels = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
 
+function weekDays() {
+  const monday = new Date();
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+  return labels.map((label, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return { label, date: d.toISOString().split('T')[0] };
+  });
+}
 
 export default function WeeklyPlanner() {
   const { state, setState } = usePlanner();
   const [title, setTitle] = useState('');
   const [type, setType] = useState<'rock' | 'sand'>('rock');
-
-  const [day, setDay] = useState('Ma');
-
+  const week = weekDays();
+  const [day, setDay] = useState(week[0].date);
   const [time, setTime] = useState('09:00');
 
   const addTask = () => {
@@ -42,13 +50,14 @@ export default function WeeklyPlanner() {
     });
   };
 
-  const tasksByDay = (day: string) =>
+  const tasksByDay = (date: string) =>
     state.tasks
-      .filter((t) => t.day === day)
-      .sort((a, b) => (a.type === b.type ? a.time.localeCompare(b.time) : a.type === 'rock' ? -1 : 1));
+      .filter((t) => t.day === date)
+      .sort((a, b) =>
+        a.type === b.type ? a.time.localeCompare(b.time) : a.type === 'rock' ? -1 : 1
+      );
 
   return (
-
     <div aria-label="weekplanner" className="space-y-4">
       <h2 className="text-xl font-semibold">Weekplanner</h2>
 
@@ -75,9 +84,9 @@ export default function WeeklyPlanner() {
           onChange={(e) => setDay(e.target.value)}
           aria-label="taak dag"
         >
-          {days.map((d) => (
-            <option key={d} value={d}>
-              {d}
+          {week.map((d) => (
+            <option key={d.date} value={d.date}>
+              {d.label}
             </option>
           ))}
         </select>
@@ -94,25 +103,27 @@ export default function WeeklyPlanner() {
       </GlassCard>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-7 gap-2">
-          {days.map((d) => (
-            <Droppable droppableId={d} key={d}>
+          {week.map((d) => (
+            <Droppable droppableId={d.date} key={d.date}>
               {(provided) => (
                 <GlassCard
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className="min-h-[200px] p-1"
                 >
-                  <h3 className="text-center font-medium mb-1">{d}</h3>
-                  {tasksByDay(d).map((t, idx) => (
+                  <h3 className="text-center font-medium mb-1">
+                    {d.label} {new Date(d.date).getDate()}
+                  </h3>
+                  {tasksByDay(d.date).map((t, idx) => (
                     <Draggable key={t.id} draggableId={t.id} index={idx}>
                       {(drag) => (
                         <div
                           ref={drag.innerRef}
                           {...drag.draggableProps}
                           {...drag.dragHandleProps}
-
-                          className={`p-1 mb-1 rounded text-sm text-white transition-transform duration-200 ${t.type === 'rock' ? 'bg-blue-600' : 'bg-gray-500'} hover:scale-105`}
-
+                          className={`p-1 mb-1 rounded text-sm text-white transition-transform duration-200 ${
+                            t.type === 'rock' ? 'bg-blue-600' : 'bg-gray-500'
+                          } hover:scale-105`}
                         >
                           {t.time} {t.title}
                         </div>
