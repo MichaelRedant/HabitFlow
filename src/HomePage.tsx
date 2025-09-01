@@ -1,10 +1,11 @@
 import { FiCalendar, FiFileText, FiArrowRight, FiGrid } from 'react-icons/fi';
 import { Sparkles } from 'lucide-react';
+import GlassCard from './components/GlassCard';
 
 export default function HomePage({ onSelect }: { onSelect: (view: 'tasks' | 'planner' | 'notes') => void }) {
   return (
     <div className="p-8">
-      <section className="max-w-3xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
+      <GlassCard className="max-w-3xl mx-auto p-8">
         <h1 className="text-2xl font-semibold mb-4">Welkom terug!</h1>
         <p className="text-slate-300 mb-6 flex items-center gap-2">
           <Sparkles className="text-teal-300" size={16} /> Klaar om productief te zijn?
@@ -32,7 +33,7 @@ export default function HomePage({ onSelect }: { onSelect: (view: 'tasks' | 'pla
             <FiArrowRight className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition" />
           </button>
         </div>
-      </section>
+      </GlassCard>
     </div>
   );
 }

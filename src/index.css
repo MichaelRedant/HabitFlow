@@ -5,13 +5,8 @@
 html, body, #root { height: 100%; }
 
 body {
-  /* futuristische Tesla-achtige look */
-  font-family: 'Orbitron', sans-serif;
-  background:
-    radial-gradient(ellipse at top left, rgba(56,189,248,0.12), transparent 60%),
-    radial-gradient(ellipse at bottom right, rgba(56,189,248,0.05), transparent 60%),
-    radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 1px) 0 0/24px 24px,
-    linear-gradient(to bottom right, #0a0a0f, #001f3f);
+  font-family: system-ui, sans-serif;
+  background: linear-gradient(to bottom right, #020617, #0f172a, #1e293b);
   color: #e5e7eb; /* text-slate-200 */
   margin: 0;
 }
