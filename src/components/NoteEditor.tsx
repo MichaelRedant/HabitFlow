@@ -10,7 +10,6 @@ export default function NoteEditor({ onCreated }: { onCreated: (n: Note) => void
 
   const [summary, setSummary] = useState<string | null>(null);
 
-
   // Load draft from localStorage
   useEffect(() => {
     try {
