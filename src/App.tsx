@@ -3,6 +3,7 @@ import MissionValues from './components/MissionValues';
 import RolesGoals from './components/RolesGoals';
 import WeeklyPlanner from './components/WeeklyPlanner';
 import DailyPage from './components/DailyPage';
+import Agenda from './components/Agenda';
 import Notes from './components/Notes';
 import SharpenSaw from './components/SharpenSaw';
 import Reflection from './components/Reflection';
@@ -11,7 +12,14 @@ import Onboarding from './Onboarding';
 
 export default function App() {
   const [page, setPage] = useState<
-    'planner' | 'daily' | 'compass' | 'notes' | 'renewal' | 'reflection' | 'help'
+    | 'planner'
+    | 'agenda'
+    | 'daily'
+    | 'compass'
+    | 'notes'
+    | 'renewal'
+    | 'reflection'
+    | 'help'
   >('planner');
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem('hf.onboarded')
@@ -30,6 +38,7 @@ export default function App() {
           <MissionValues />
           <nav className="mt-4 space-y-1">
             <NavButton label="Weekplanner" active={page === 'planner'} onClick={() => setPage('planner')} />
+            <NavButton label="Agenda" active={page === 'agenda'} onClick={() => setPage('agenda')} />
             <NavButton label="Dag" active={page === 'daily'} onClick={() => setPage('daily')} />
             <NavButton label="Weekkompas" active={page === 'compass'} onClick={() => setPage('compass')} />
             <NavButton label="Notities" active={page === 'notes'} onClick={() => setPage('notes')} />
@@ -40,6 +49,7 @@ export default function App() {
         </aside>
         <main className="flex-1 overflow-y-auto p-4 animate-fade-in" aria-label="hoofdinhoud">
           {page === 'planner' && <WeeklyPlanner />}
+          {page === 'agenda' && <Agenda />}
           {page === 'daily' && <DailyPage />}
           {page === 'compass' && <RolesGoals />}
           {page === 'notes' && <Notes />}

@@ -7,31 +7,23 @@ import type { Note, Task } from '../models';
 import { analyzeNote } from '../ai';
 import GlassCard from './GlassCard';
 
-const dayLabel = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
-
-
-function todayName() {
-  return dayLabel[new Date().getDay()];
-}
-
 export default function DailyPage() {
   const { state, setState } = usePlanner();
-  const day = todayName();
-  const tasks = state.tasks.filter((t) => t.day === day);
+  const today = new Date().toISOString().split('T')[0];
+  const tasks = state.tasks.filter((t) => t.day === today);
   const priorities = tasks.filter((t) => t.type === 'rock').slice(0, 3);
   const [note, setNote] = useState('');
 
 
   const addNote = async () => {
     if (!note.trim()) return;
-    const today = new Date().toISOString().split('T')[0];
     const newNote: Note = {
       id: Date.now().toString(),
       content: note,
       summary: '',
       date: today,
 
-      tags: ['dagelijks', day],
+      tags: ['dagelijks', today],
       linkedWeek: undefined,
       urgent: false,
       important: false,
@@ -41,12 +33,11 @@ export default function DailyPage() {
     analyzeNote(note).then(({ summary, tasks }) => {
       setState((s) => {
         const notes = s.notes.map((n) => (n.id === newNote.id ? { ...n, summary } : n));
-        const dayNames = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
         const newTasks: Task[] = tasks.map((t) => ({
           id: `${Date.now()}-${Math.random()}`,
           title: t.title,
           type: 'sand',
-          day: dayNames[new Date(t.date || today).getDay()],
+          day: t.date ?? today,
           time: '09:00',
           linkedGoalId: undefined,
         }));
