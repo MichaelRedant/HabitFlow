@@ -25,8 +25,8 @@ export default function App() {
   return (
     <>
       {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
-      <div className="flex h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-gray-100">
-        <aside className="w-64 border-r border-gray-700 p-4 overflow-y-auto backdrop-blur" aria-label="zijbalk">
+        <div className="flex h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-gray-100">
+          <aside className="w-64 border-r border-white/10 bg-white/5 p-4 overflow-y-auto backdrop-blur-xl" aria-label="zijbalk">
           <MissionValues />
           <nav className="mt-4 space-y-1">
             <NavButton label="Weekplanner" active={page === 'planner'} onClick={() => setPage('planner')} />
