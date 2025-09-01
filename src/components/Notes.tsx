@@ -5,6 +5,7 @@ import { usePlanner } from '../PlannerContext';
 import type { Note, Task } from '../models';
 import NoteMatrix from './NoteMatrix';
 import { analyzeNote } from '../ai';
+import GlassCard from './GlassCard';
 
 
 export default function Notes() {
@@ -93,9 +94,9 @@ export default function Notes() {
         aria-label="zoek notities"
       />
 
-      <div className="space-y-2">
+      <GlassCard className="space-y-2 p-4">
         <textarea
-          className="w-full h-32 border p-2"
+          className="w-full h-32 bg-transparent border border-white/10 p-2 rounded"
           value={content}
           onChange={(e) => setContent(e.target.value)}
 
@@ -104,7 +105,7 @@ export default function Notes() {
 
         />
         <input
-          className="border p-1 w-full"
+          className="bg-transparent border border-white/10 p-1 w-full rounded"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
 
@@ -123,7 +124,7 @@ export default function Notes() {
         </div>
 
         <select
-          className="border p-1 w-full"
+          className="bg-transparent border border-white/10 p-1 w-full rounded"
           value={linkedGoalId}
           onChange={(e) => setLinkedGoalId(e.target.value)}
 
@@ -138,7 +139,7 @@ export default function Notes() {
           ))}
         </select>
         <input
-          className="border p-1 w-full"
+          className="bg-transparent border border-white/10 p-1 w-full rounded"
           value={week}
           onChange={(e) => setWeek(e.target.value)}
 
@@ -147,28 +148,29 @@ export default function Notes() {
         />
         <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={addNote}>
           Voeg notitie toe
-
         </button>
-      </div>
+      </GlassCard>
       <ul className="space-y-4">
         {filteredNotes.map((n) => (
-          <li key={n.id} className="border p-2 rounded">
-            <div className="flex justify-between text-xs text-gray-400 mb-1">
-              <span>{n.date}</span>
-              <button
-                onClick={() => removeNote(n.id)}
-                className="text-red-500 hover:underline"
-                aria-label="verwijder notitie"
-              >
-                Verwijder
-              </button>
-            </div>
-            <div className="text-xs text-gray-400 mb-1">
-              Labels: {n.tags.join(', ') || '-'}
-            </div>
-            <div className="prose prose-sm max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
-            </div>
+          <li key={n.id}>
+            <GlassCard className="p-2">
+              <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <span>{n.date}</span>
+                <button
+                  onClick={() => removeNote(n.id)}
+                  className="text-red-500 hover:underline"
+                  aria-label="verwijder notitie"
+                >
+                  Verwijder
+                </button>
+              </div>
+              <div className="text-xs text-gray-400 mb-1">
+                Labels: {n.tags.join(', ') || '-'}
+              </div>
+              <div className="prose prose-sm max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.summary || n.content}</ReactMarkdown>
+              </div>
+            </GlassCard>
           </li>
         ))}
       </ul>

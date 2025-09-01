@@ -15,6 +15,7 @@ import App from './App';
 import HomePage from './HomePage';
 import Onboarding from './Onboarding';
 import HelpPage from './HelpPage';
+import GlassCard from './components/GlassCard';
 
 const cls = (...xs: Array<string | false | undefined>) => xs.filter(Boolean).join(' ');
 
@@ -30,9 +31,9 @@ export default function TeslaLayout() {
   }
 
   return (
-    <div className="flex h-screen text-slate-100">
-      {/* Navigation bar */}
-      <nav className="w-20 flex flex-col items-center py-6 bg-black/80 backdrop-blur-xl border-r border-white/10">
+      <div className="flex h-screen text-slate-100">
+        {/* Navigation bar */}
+        <nav className="w-20 flex flex-col items-center py-6 bg-black/60 backdrop-blur-xl border-r border-white/10">
         <div className="mb-8 text-red-500 text-2xl font-bold">⚡</div>
 
         <ul className="flex-1 flex flex-col gap-6 list-none">
@@ -108,16 +109,8 @@ export default function TeslaLayout() {
         </button>
       </nav>
 
-      {/* Main content */}
-      <main className="flex-1 relative overflow-auto bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <div
-          className="absolute inset-0 -z-10 opacity-20"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(255,255,255,.25) 1px, transparent 1px)',
-            backgroundSize: '24px 24px'
-          }}
-        />
+        {/* Main content */}
+        <main className="flex-1 relative overflow-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
         {active === 'home' && <HomePage onSelect={setActive} />}
         {active === 'tasks' && <TaskMatrix />}
         {active === 'planner' && <Planner />}
@@ -132,14 +125,14 @@ export default function TeslaLayout() {
           />
         )}
 
-        {active === 'profile' && (
-          <div className="p-8">
-            <section className="max-w-3xl mx-auto rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 p-8 shadow-lg">
-              <h1 className="text-2xl font-semibold mb-4">Profiel</h1>
-              <p className="text-slate-300">Profielinformatie komt hier.</p>
-            </section>
-          </div>
-        )}
+          {active === 'profile' && (
+            <div className="p-8">
+              <GlassCard className="max-w-3xl mx-auto p-8">
+                <h1 className="text-2xl font-semibold mb-4">Profiel</h1>
+                <p className="text-slate-300">Profielinformatie komt hier.</p>
+              </GlassCard>
+            </div>
+          )}
       </main>
       {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
     </div>
